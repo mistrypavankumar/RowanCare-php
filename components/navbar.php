@@ -14,12 +14,12 @@
                 <div class="hidden md:flex gap-5">
 
                     <!-- Register and Login Buttons -->
-                    <a href="#"
+                    <a href="pages/register.php"
                         class="px-7 text-black/80 bg-white hover:scale-105 duration-300 py-2 rounded-md font-medium border-[1.5px] border-black/20 cursor-pointer">
                         Register
                     </a>
 
-                    <a href="#"
+                    <a href="pages/login.php"
                         class="px-7 bg-[#0D57E3]/90 hover:bg-[#0D57E3] hover:scale-105 duration-300 text-white py-2 rounded-md font-medium cursor-pointer">
                         Login
                     </a>

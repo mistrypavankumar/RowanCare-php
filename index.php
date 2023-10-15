@@ -53,7 +53,7 @@
 
                     <!-- Appointment button -->
                     <a class="text-center bg-[#0D57E3] text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium"
-                        href="pages/login">Get a
+                        href="pages/appointment.php">Get a
                         Appointment</a>
                 </div>
                 <div class="flex justify-center items-center">
