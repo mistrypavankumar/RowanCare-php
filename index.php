@@ -1,24 +1,11 @@
 <?php require "constants/data.php" ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RowanCare</title>
-
-    <!-- Tailwind css -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Roboto Google font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500&display=swap"
-        rel="stylesheet">
-
+<head>  
+    <?php require_once "components/header.php" ?>
+    
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -32,10 +19,13 @@
     <main>
 
         <!-- navbar -->
-        <?php include "components/navbar.php" ?>
+        <?php 
+        require_once "components/navbar.php";
+        stickyNavbar()        
+        ?>
 
         <!-- banner -->
-        <div class="h-screen w-full pt-24 md:pt-0 relative overflow-hidden">
+        <div class="h-screen bg-[#F5F8FE] w-full pt-24 md:pt-0 relative overflow-hidden">
             <img class="w-full absolute" src="./assets/images/bg-design.png" alt="banner-bg-img">
             <div
                 class="w-[92%] md:w-[85%] mx-auto flex flex-col md:flex-row justify-center items-center h-full gap-10 relative z-10">
@@ -53,7 +43,7 @@
 
                     <!-- Appointment button -->
                     <a class="text-center bg-[#0D57E3] text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium"
-                        href="pages/login">Get a
+                        href="appointment.php">Get a
                         Appointment</a>
                 </div>
                 <div class="flex justify-center items-center">
@@ -63,15 +53,48 @@
         </div>
 
         <!-- specialities -->
-        <div class="h-screen w-full">
-            <h1>Center</h1>
+        <div class="h-auto md:h-screen w-full bg-white">
+            <div class="w-[92%] md:w-[85%] mx-auto py-14">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl md:text-4xl font-bold">Specialities</h1>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-10">
+                    <?php
+                        include 'components/specialitiesCard.php';
+                        
+                        foreach ($specialities as $speciality) {
+                            specialitiesCard($speciality['dark'], $speciality['light'], $speciality['name']);
+                        }
+                    ?>
+                </div>
+            </div>
         </div>
 
         <!-- Best Doctors -->
+        <div class="bg-[#F5F8FE] h-auto w-full relative overflow-hidden">
+            <img class="w-full h-auto absolute z-10" src="./assets/images/banner-img1.png" alt="banner-bg-img">
+
+            <div class="w-[92%] md:w-[85%] mx-auto py-14">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl md:text-4xl font-bold">Best Doctors</h1>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 py-10 gap-5 relative z-20">
+                    <?php 
+                        include "components/bestDoctorCard.php";
+
+                        bestDoctorCard();
+                        bestDoctorCard();
+                        bestDoctorCard();
+                        bestDoctorCard();
+
+                    ?>
+                </div>
+            </div>
+        </div>
 
         <!-- footer -->
-
-
     </main>
 </body>
 
