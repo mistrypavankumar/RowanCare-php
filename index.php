@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>  
+<head>
     <?php require_once "components/header.php" ?>
-    
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -19,10 +19,10 @@
     <main>
 
         <!-- navbar -->
-        <?php 
+        <?php
         require_once "components/navbar.php";
-        stickyNavbar()        
-        ?>
+        stickyNavbar()
+            ?>
 
         <!-- banner -->
         <div class="h-screen bg-[#F5F8FE] w-full pt-24 md:pt-0 relative overflow-hidden">
@@ -61,11 +61,11 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-10">
                     <?php
-                        include 'components/specialitiesCard.php';
-                        
-                        foreach ($specialities as $speciality) {
-                            specialitiesCard($speciality['dark'], $speciality['light'], $speciality['name']);
-                        }
+                    include 'components/specialitiesCard.php';
+
+                    foreach ($specialities as $speciality) {
+                        specialitiesCard($speciality['dark'], $speciality['light'], $speciality['name']);
+                    }
                     ?>
                 </div>
             </div>
@@ -81,13 +81,13 @@
                 </div>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 py-10 gap-5 relative z-20">
-                    <?php 
-                        include "components/bestDoctorCard.php";
+                    <?php
+                    include "components/bestDoctorCard.php";
 
-                        bestDoctorCard();
-                        bestDoctorCard();
-                        bestDoctorCard();
-                        bestDoctorCard();
+                    bestDoctorCard();
+                    bestDoctorCard();
+                    bestDoctorCard();
+                    bestDoctorCard();
 
                     ?>
                 </div>
