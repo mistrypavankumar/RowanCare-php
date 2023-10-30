@@ -47,10 +47,13 @@ function stickyNavbar()
                     Login
                 </a>
             </div>
-
+            <div id="idMenuBar" class="block md:hidden w-fit">
+                <i class="fa fa-bars text-2xl text-[#0a43b0] hover:text-[#0D57E3] duration-300 cursor-pointer"></i>
+            </div>
 
             <!-- Mobile view navbar -->
-            <div class="hidden border-r-2 bg-white absolute top-0 left-0 w-[75%] h-screen p-5 flex flex-col md:hidden">
+            <div id="mobileNavbar"
+                class="md:hidden border-r-2 bg-white absolute translate-x-[-100%] top-0 left-0 w-[75%] h-screen p-5 flex flex-col">
                 <a href="index.php" class="w-[180px] pt-4 pb-10  cursor-pointer">
                     <img class="w-full" src="./assets/logo/Rowancare-logo.png" alt="">
                 </a>
@@ -91,7 +94,6 @@ function stickyNavbar()
             </div>
         </div>
     </div>
-
     <?php
 }
 ?>

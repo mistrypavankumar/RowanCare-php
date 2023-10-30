@@ -62,8 +62,6 @@ session_start();
         } else {
             $errorMessage = "X Please fill all the fields X";
         }
-
-
     }
 
     ?>

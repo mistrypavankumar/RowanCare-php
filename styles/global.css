@@ -1,0 +1,9 @@
+#mobileNavbar{
+    transform: translateX(-100%);
+    transition: 0.3s ease-out;
+}
+
+#mobileNavbar.active{
+    transform: translateX(0%);
+    transition: 0.3s ease-in;
+}
