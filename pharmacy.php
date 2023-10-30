@@ -16,6 +16,13 @@
         ?>
 
 
+    <!-- footer -->
+    <?php
+    require_once "components/footer.php";
+    footer();
+    ?>
+
+
 </body>
 
 </html>

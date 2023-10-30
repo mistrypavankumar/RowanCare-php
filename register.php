@@ -42,11 +42,12 @@ session_start();
     //  Handling registeration
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = $_POST["name"];
+        $email = $_POST["email"];
         $phoneNumber = $_POST["phoneNumber"];
         $password = $_POST["password"];
         $confirmPassword = $_POST['confirmPassword'];
 
-        if (!empty($name) && !empty($phoneNumber) && !empty($password) && !empty($confirmPassword)) {
+        if (!empty($name) && !empty($email) && !empty($phoneNumber) && !empty($password) && !empty($confirmPassword)) {
             if ($password != $confirmPassword) {
                 $errorMessage = "X Password doesn't match!! X ";
             } else {
@@ -67,7 +68,7 @@ session_start();
 
     ?>
 
-    <div class="h-screen flex items-center w-[85%] mx-auto mt-5">
+    <div class="h-screen flex items-center w-[92%] md:w-[85%] mx-auto mt-5">
         <div class="hidden md:block">
             <img src="./assets/images/regLog.png" alt="reg-img">
         </div>
@@ -100,19 +101,27 @@ session_start();
 
             <form method="POST" action="register.php" class="flex flex-col gap-3 mt-5">
                 <input class="<?php echo $inputStyle ?>" type="text"
-                    placeholder="<?php echo ($register == 'patient') ? 'Patient' : 'Doctor'; ?> Full Name" name="name">
-                <input class="<?php echo $inputStyle ?>" type="number" placeholder="Mobile Number" name="phoneNumber">
-                <input class="<?php echo $inputStyle ?>" type="password" placeholder="Create Password" name="password">
-                <input class="<?php echo $inputStyle ?>" type="password" placeholder="Confirm Password"
+                    placeholder="<?php echo ($register == 'patient') ? 'Patient' : 'Doctor'; ?> Full Name*" name="name">
+                <input class="<?php echo $inputStyle ?>" type="email" placeholder="Email*" name="email">
+                <input class="<?php echo $inputStyle ?>" type="number" placeholder="Mobile Number*" name="phoneNumber">
+                <input class="<?php echo $inputStyle ?>" type="password" placeholder="Create Password*" name="password">
+                <input class="<?php echo $inputStyle ?>" type="password" placeholder="Confirm Password*"
                     name="confirmPassword">
 
                 <a class="w-full flex justify-end font-semibold text-[#0D57E3]" href="login.php">Already have an
                     account?</a>
-                <button class="font-semibold mt-3 bg-[#0D57E3] text-white p-3 rounded-md">Sign Up</button>
+                <button
+                    class="font-semibold mt-3 bg-[#0D57E3] hover:bg-[#0a43b0] duration-500 text-white p-3 rounded-md">Sign
+                    Up</button>
             </form>
         </div>
     </div>
 
+    <!-- footer -->
+    <?php
+    require_once "components/footer.php";
+    footer();
+    ?>
 </body>
 
 </html>

@@ -42,7 +42,7 @@
                     </p>
 
                     <!-- Appointment button -->
-                    <a class="text-center bg-[#0D57E3] text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium"
+                    <a class="text-center bg-[#0D57E3] hover:bg-[#0a43b0] duration-500   text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium"
                         href="appointment.php">Get a
                         Appointment</a>
                 </div>
@@ -95,6 +95,10 @@
         </div>
 
         <!-- footer -->
+        <?php
+        require_once "components/footer.php";
+        footer();
+        ?>
     </main>
 </body>
 
