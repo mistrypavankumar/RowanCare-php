@@ -6,13 +6,6 @@
 <head>
     <?php require_once "components/header.php" ?>
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            font-family: 'Roboto', sans-serif;
-        }
-    </style>
-
 </head>
 
 <body>
@@ -72,7 +65,7 @@
         </div>
 
         <!-- Best Doctors -->
-        <div class="bg-[#F5F8FE] h-auto w-full relative overflow-hidden">
+        <div id="mobileNavbar" class="bg-[#F5F8FE] h-auto w-full relative overflow-hidden">
             <img class="w-full h-auto absolute z-10" src="./assets/images/banner-img1.png" alt="banner-bg-img">
 
             <div class="w-[92%] md:w-[85%] mx-auto py-14">

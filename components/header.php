@@ -6,10 +6,10 @@
     <?php echo isset($pageTitle) ? $pageTitle : "RowanCare"; ?>
 </title>
 
-<link rel="shortcut icon" href="../assets/weblogo.png" type="image/x-icon">
+<link rel="shortcut icon" href="assets/weblogo.png" type="image/x-icon">
 
 <!-- global css -->
-<link rel="stylesheet" href="./css/global.css">
+<link rel="stylesheet" href="styles/global.css" type="text/css">
 
 <!-- Tailwind css -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -23,3 +23,13 @@
 
 <!-- Font Awesome link -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Javascript -->
+<script src="js/navbar.js"></script>
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        font-family: 'Roboto', sans-serif;
+    }
+</style>
