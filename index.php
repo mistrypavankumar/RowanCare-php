@@ -65,7 +65,7 @@
         </div>
 
         <!-- Best Doctors -->
-        <div id="mobileNavbar" class="bg-[#F5F8FE] h-auto w-full relative overflow-hidden">
+        <div class="bg-[#F5F8FE] h-auto w-full relative overflow-hidden">
             <img class="w-full h-auto absolute z-10" src="./assets/images/banner-img1.png" alt="banner-bg-img">
 
             <div class="w-[92%] md:w-[85%] mx-auto py-14">
@@ -77,10 +77,15 @@
                     <?php
                     include "components/bestDoctorCard.php";
 
-                    bestDoctorCard();
-                    bestDoctorCard();
-                    bestDoctorCard();
-                    bestDoctorCard();
+                    foreach ($bestDoctors as $bestDoctor) {
+                        bestDoctorCard(
+                            image: $bestDoctor['image'],
+                            doctorName: $bestDoctor['doctorName'],
+                            specialization: $bestDoctor['specialization'],
+                            rating: $bestDoctor['rating'],
+                            place: $bestDoctor['place']
+                        );
+                    }
 
                     ?>
                 </div>

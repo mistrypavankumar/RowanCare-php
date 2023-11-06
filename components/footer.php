@@ -26,14 +26,14 @@ function footer()
 
                 $patientLinks = [
                     "Search for Doctors" => "#search",
-                    "Login" => "#login",
-                    "Register" => "#register"
+                    "Login" => "login.php",
+                    "Register" => "register.php"
                 ];
 
                 $doctorLinks = [
                     "Appointments" => "#appointments",
                     "Chats" => "#chats",
-                    "Login" => "#doc-login"
+                    "Login" => "login.php"
                 ];
 
                 require_once "components/functions.php";
