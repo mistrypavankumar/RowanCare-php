@@ -6,7 +6,7 @@ function stickyNavbar()
     <?php
     $page = basename($_SERVER['REQUEST_URI']);
     ?>
-    <div class="py-4 w-full fixed top-0 z-50">
+    <div id="headerNavbar" class="py-4 w-full fixed top-0 z-[9999]">
         <div class="flex items-center w-[92%] md:w-[85%] mx-auto py-2 justify-between">
             <a href="index.php" class="w-[180px] cursor-pointer">
                 <img class="w-full" src="./assets/logo/Rowancare-logo.png" alt="">
@@ -84,10 +84,10 @@ function stickyNavbar()
 
                     <div class="flex flex-col gap-5">
                         <a class="px-7 bg-transparent text-center border-2 border-[#0D57E3]/50 duration-300 text-[#0D57E3] py-2 rounded-md font-medium cursor-pointer"
-                            href="contactus.php">Register</a>
+                            href="register.php">Register</a>
 
                         <a class="px-7 bg-[#0D57E3]/90 text-center hover:bg-[#0D57E3] duration-300 text-white py-2 rounded-md font-medium cursor-pointer"
-                            href="contactus.php">Login</a>
+                            href="login.php">Login</a>
                     </div>
 
                 </div>

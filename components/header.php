@@ -25,7 +25,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <!-- Javascript -->
-<script src="js/navbar.js"></script>
+<script src="js/navbar.js?v=1"></script>
+
 
 <style>
     body {
