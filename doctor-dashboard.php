@@ -3,32 +3,25 @@
 
 <head>
     <?php
-    $pageTitle = "RowanCare | Appointment";
+    $pageTitle = "RowanCare | Doctor";
     require_once "components/header.php"
         ?>
 </head>
 
 <body>
-    <!-- navbar -->
-    <?php
-    require_once "components/navbar.php";
+    <?php require_once "components/navbar.php";
     stickyNavbar()
         ?>
+
 
     <main>
         <!-- Banner -->
         <?php
         require_once "components/banner.php";
-        banner(title: "Book Appointment", path: "Appointment");
+        banner(title: "Dashboard", path: "Doctor-Dashboard");
         ?>
-
+        <a href="logout.php">Logout</a>
     </main>
-
-    <!-- footer -->
-    <?php
-    require_once "components/footer.php";
-    footer();
-    ?>
 </body>
 
 </html>

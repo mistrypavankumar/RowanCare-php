@@ -1,9 +1,34 @@
 <?php
 include 'db_connection.php';
+session_start();
+
+// Check if the login cookie exists
+if (isset($_COOKIE['rowanCarepatient'])) {
+    // Redirect
+    header("Location: patient-dashboard.php");
+    exit;
+} else if (isset($_COOKIE['rowanCaredoctor'])) {
+    // Redirect
+    header("Location: doctor-dashboard.php");
+    exit;
+}
 
 
 $errorMessage = "";
 $email = "";
+
+
+// Check if register value is set in session, if not, set to 'patient' as default
+if (!isset($_SESSION['login'])) {
+    $_SESSION['login'] = 'patient';
+}
+
+// Check if user has clicked the switch link to change login type
+if (isset($_GET['login'])) {
+    $_SESSION['login'] = ($_GET['login'] == 'patient') ? 'patient' : 'doctor';
+}
+
+$loginas = $_SESSION['login'];
 
 //  Handling login
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -11,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
 
     if (!empty($email) && !empty($password)) {
+
         $isLoginSuccess = loginUser($conn, $email, $password);
 
         if ($isLoginSuccess) {
@@ -18,6 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $errorMessage = "Invalid email or password.";
         }
+
     } else {
         $errorMessage = "X Please fill all the fields X";
     }
@@ -44,9 +71,6 @@ require_once "components/navbar.php";
     <?php
     stickyNavbar()
         ?>
-
-
-
 
     <div class="h-screen flex items-center w-[92%] md:w-[85%] mx-auto mt-5">
         <div class="hidden md:block w-[70%]">
@@ -85,16 +109,14 @@ require_once "components/navbar.php";
                     value="<?php echo $email; ?>">
                 <input class="<?php echo $inputStyle ?>" type="password" placeholder="Password" name="password">
 
-                <a class="w-full flex justify-end font-semibold text-[#0D57E3]" href="forgot-password.php">Forgot
+                <a class="w-fit ml-auto flex justify-end font-semibold text-[#0D57E3]" href="forgot-password.php">Forgot
                     Password?</a>
                 <button
                     class="font-semibold mt-3 bg-[#0D57E3] hover:bg-[#0a43b0] duration-500 text-white p-3 rounded-md">Login</button>
 
-                <p class="mt-3 text-center font-semibold">Don't have an account? <a class=" text-[#0D57E3]"
-                        href="register.php">Register</a></p>
+                <p class="mt-3 text-center font-semibold w-fit mx-auto">Don't have an account? <a
+                        class=" text-[#0D57E3]" href="register.php">Register</a></p>
             </form>
-
-            <a href="logout.php">Logout</a>
         </div>
     </div>
 
