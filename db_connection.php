@@ -50,7 +50,10 @@ function registerUser($conn, $firstName, $lastName, $phoneNumber, $email, $passw
         $stmt1->execute();
 
         $conn->commit();  // commit the transaction
-        header("Location: login.php");
+
+
+        // login the user
+        loginUser($conn, $email, $password);
 
     } catch (Exception $err) {
         $conn->rollback();
