@@ -1,5 +1,65 @@
 <?php
+include 'db_connection.php';
 session_start();
+
+
+// Check if register value is set in session, if not, set to 'patient' as default
+if (!isset($_SESSION['register'])) {
+    $_SESSION['register'] = 'patient';
+}
+
+// Check if user has clicked the switch link to change register type
+if (isset($_GET['register'])) {
+    $_SESSION['register'] = ($_GET['register'] == 'patient') ? 'patient' : 'doctor';
+}
+
+$register = $_SESSION['register'];
+$inputStyle = "border-2 p-3 rounded-md outline-none w-full";
+?>
+
+<?php
+
+$errorMessage = "";
+$successMessage = "";
+$firstName = $lastName = $email = $phoneNumber = "";
+$password = $confirmPassword = "";
+
+//  Handling registeration
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $firstName = $_POST["firstName"] ?? "";
+    $lastName = $_POST["lastName"] ?? "";
+    $email = $_POST["email"] ?? null;
+    $phoneNumber = $_POST["phoneNumber"] ?? "";
+    $password = $_POST["password"] ?? "";
+    $confirmPassword = $_POST['confirmPassword'] ?? "";
+
+
+    if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($phoneNumber) && !empty($password) && !empty($confirmPassword)) {
+        if ($password != $confirmPassword) {
+            $errorMessage = "X Password doen't match X";
+        } else {
+            if ($register == "patient") {
+                $isResgisterSuccess = registerUser($conn, $firstName, $lastName, $phoneNumber, $email, $password);
+
+                if ($isResgisterSuccess) {
+                    $successMessage = "Registered Successfully :) Login Now";
+                    $firstName = $lastName = $email = $phoneNumber = "";
+                    $password = $confirmPassword = "";
+                } else {
+                    $errorMessage = "User already exists.";
+                }
+            }
+        }
+
+    } else {
+        $errorMessage = "X Please fill all the fields X";
+
+    }
+}
+
+require_once "components/navbar.php";
+
+
 ?>
 
 <!DOCTYPE html>
@@ -15,56 +75,8 @@ session_start();
 <body>
     <!-- navbar -->
     <?php
-    require_once "components/navbar.php";
     stickyNavbar()
         ?>
-
-    <?php
-
-    // Check if register value is set in session, if not, set to 'patient' as default
-    if (!isset($_SESSION['register'])) {
-        $_SESSION['register'] = 'patient';
-    }
-
-    // Check if user has clicked the switch link to change register type
-    if (isset($_GET['register'])) {
-        $_SESSION['register'] = ($_GET['register'] == 'patient') ? 'patient' : 'doctor';
-    }
-
-    $register = $_SESSION['register'];
-    $inputStyle = "border-2 p-3 rounded-md outline-none";
-    ?>
-
-    <?php
-
-    $errorMessage = "";
-    $successMessage = "";
-    //  Handling registeration
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $name = $_POST["name"];
-        $email = $_POST["email"];
-        $phoneNumber = $_POST["phoneNumber"];
-        $password = $_POST["password"];
-        $confirmPassword = $_POST['confirmPassword'];
-
-        if (!empty($name) && !empty($email) && !empty($phoneNumber) && !empty($password) && !empty($confirmPassword)) {
-            if ($password != $confirmPassword) {
-                $errorMessage = "X Password doesn't match!! X ";
-            } else {
-                // echo $errorMessage;
-                // echo $name;
-                // echo $phoneNumber;
-                // echo $password;
-                $successMessage = "Registered Successfully :) Login Now";
-            }
-
-
-        } else {
-            $errorMessage = "X Please fill all the fields X";
-        }
-    }
-
-    ?>
 
     <div class="h-screen flex items-center w-[92%] md:w-[85%] mx-auto mt-5">
         <div class="hidden md:block">
@@ -98,10 +110,18 @@ session_start();
             </div>
 
             <form method="POST" action="register.php" class="flex flex-col gap-3 mt-5">
-                <input class="<?php echo $inputStyle ?>" type="text"
-                    placeholder="<?php echo ($register == 'patient') ? 'Patient' : 'Doctor'; ?> Full Name*" name="name">
-                <input class="<?php echo $inputStyle ?>" type="email" placeholder="Email*" name="email">
-                <input class="<?php echo $inputStyle ?>" type="number" placeholder="Mobile Number*" name="phoneNumber">
+                <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full">
+                    <input class="<?php echo $inputStyle ?>" type="text"
+                        placeholder="<?php echo ($register == 'patient') ? 'Patient' : 'Doctor'; ?> First Name*"
+                        name="firstName" value="<?php echo $firstName; ?>">
+                    <input class="<?php echo $inputStyle ?>" type="text"
+                        placeholder="<?php echo ($register == 'patient') ? 'Patient' : 'Doctor'; ?> Last Name*"
+                        name="lastName" value="<?php echo $lastName; ?>">
+                </div>
+                <input class="<?php echo $inputStyle ?>" type="email" placeholder="Email*" name="email"
+                    value="<?php echo $email; ?>">
+                <input class="<?php echo $inputStyle ?>" type="number" placeholder="Mobile Number*" name="phoneNumber"
+                    value="<?php echo $phoneNumber; ?>">
                 <input class="<?php echo $inputStyle ?>" type="password" placeholder="Create Password*" name="password">
                 <input class="<?php echo $inputStyle ?>" type="password" placeholder="Confirm Password*"
                     name="confirmPassword">
