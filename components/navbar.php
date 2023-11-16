@@ -1,15 +1,27 @@
 <?php
-function stickyNavbar()
+function stickyNavbar($isLoggedIn = false, $logoPath = "./assets/logo/Rowancare-logo.png")
 {
     ?>
 
     <?php
     $page = basename($_SERVER['REQUEST_URI']);
+
+    $uesrType = "";
+
+    // Check if the login cookie exists
+    if (isset($_COOKIE['rowanCarepatient'])) {
+        $uesrType = "patient";
+        $isLoggedIn = true;
+    } else if (isset($_COOKIE['rowanCaredoctor'])) {
+        $isLoggedIn = true;
+        $uesrType = "doctor";
+    }
+
     ?>
     <div id="headerNavbar" class="py-4 w-full fixed top-0 z-[9999]">
         <div class="flex items-center w-[92%] md:w-[85%] mx-auto py-2 justify-between">
             <a href="index.php" class="w-[180px] cursor-pointer">
-                <img class="w-full" src="./assets/logo/Rowancare-logo.png" alt="">
+                <img class="w-full" src="<?php echo $logoPath ?>" alt="">
             </a>
             <div class="hidden md:flex items-center gap-10">
                 <a class="
@@ -36,16 +48,27 @@ function stickyNavbar()
             </div>
             <div class="hidden md:flex gap-5">
 
-                <!-- Register and Login Buttons -->
-                <a href="register.php"
-                    class="px-7 text-black/80 bg-white hover:scale-105 duration-300 py-2 rounded-md font-medium border-[1.5px] border-black/20 cursor-pointer">
-                    Register
-                </a>
+                <?php
+                if ($isLoggedIn) {
+                    echo '
+                    <a href="' . $uesrType . '-dashboard.php"
+                        class="px-7 bg-[#0D57E3]/90 hover:bg-[#0D57E3] hover:scale-105 duration-300 text-white py-2 rounded-md font-medium cursor-pointer">
+                        Dashboard
+                    </a>';
+                } else {
+                    // Register and Login Buttons
+                    echo '
+                    <a href="register.php"
+                        class="px-7 text-black/80 bg-white hover:scale-105 duration-300 py-2 rounded-md font-medium border-[1.5px] border-black/20 cursor-pointer">
+                        Register
+                    </a>
+                    <a href="login.php"
+                        class="px-7 bg-[#0D57E3]/90 hover:bg-[#0D57E3] hover:scale-105 duration-300 text-white py-2 rounded-md font-medium cursor-pointer">
+                        Login
+                    </a>';
+                }
 
-                <a href="login.php"
-                    class="px-7 bg-[#0D57E3]/90 hover:bg-[#0D57E3] hover:scale-105 duration-300 text-white py-2 rounded-md font-medium cursor-pointer">
-                    Login
-                </a>
+                ?>
             </div>
             <div id="idMenuBar" class="block md:hidden w-fit">
                 <i class="fa fa-bars text-2xl text-[#0a43b0] hover:text-[#0D57E3] duration-300 cursor-pointer"></i>
@@ -60,6 +83,7 @@ function stickyNavbar()
 
                 <div class="flex flex-col justify-between h-full">
                     <div class="flex flex-col">
+
                         <a class="
                         <?php
                         echo "hover:bg-[#0D57E3]/10 py-3 px-2 text-[17px] rounded-md duration-300 font-medium hover:text-[#0D57E3]";
@@ -82,13 +106,25 @@ function stickyNavbar()
                         ?>" href="contactus.php">Contact Us</a>
                     </div>
 
-                    <div class="flex flex-col gap-5">
-                        <a class="px-7 bg-transparent text-center border-2 border-[#0D57E3]/50 duration-300 text-[#0D57E3] py-2 rounded-md font-medium cursor-pointer"
-                            href="register.php">Register</a>
+                    <?php
+                    if ($isLoggedIn) {
+                        echo '
+                        <a href="login.php"
+                            class="px-7 bg-[#0D57E3]/90 hover:bg-[#0D57E3] hover:scale-105 duration-300 text-white py-2 rounded-md text-center font-medium cursor-pointer">
+                            Dashboard
+                        </a>';
 
-                        <a class="px-7 bg-[#0D57E3]/90 text-center hover:bg-[#0D57E3] duration-300 text-white py-2 rounded-md font-medium cursor-pointer"
-                            href="login.php">Login</a>
-                    </div>
+                    } else {
+                        echo '
+                            <div class="flex flex-col gap-5">
+                            <a class="px-7 bg-transparent text-center border-2 border-[#0D57E3]/50 duration-300 text-[#0D57E3] py-2 rounded-md font-medium cursor-pointer"
+                                href="register.php">Register</a>
+                            <a class="px-7 bg-[#0D57E3]/90 text-center hover:bg-[#0D57E3] duration-300 text-white py-2 rounded-md font-medium cursor-pointer"
+                                href="login.php">Login</a>
+                        </div>
+                            ';
+                    }
+                    ?>
 
                 </div>
             </div>

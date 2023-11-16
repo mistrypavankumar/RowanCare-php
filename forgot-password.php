@@ -59,7 +59,7 @@
             <form method="POST" action="forgot-password.php" class="flex flex-col gap-3 mt-5">
                 <input class="<?php echo $inputStyle ?>" type="email" placeholder="Email" name="email">
 
-                <a class="w-full flex justify-end font-semibold text-[#0D57E3]" href="login.php">Remember your
+                <a class="w-fit ml-auto flex justify-end font-semibold text-[#0D57E3]" href="login.php">Remember your
                     Password?</a>
                 <button
                     class="font-semibold mt-3 bg-[#0D57E3] hover:bg-[#0a43b0] duration-500 text-white p-3 rounded-md">Reset

@@ -1,4 +1,7 @@
-<?php require "constants/data.php" ?>
+<?php
+
+require "constants/data.php";
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,8 +17,18 @@
         <!-- navbar -->
         <?php
         require_once "components/navbar.php";
-        stickyNavbar()
-            ?>
+
+        $isLoggedIn = false;
+
+        // Check if the login cookie exists
+        if (isset($_COOKIE['rowanCarepatient'])) {
+            $isLoggedIn = true;
+        } else if (isset($_COOKIE['rowanCaredoctor'])) {
+            $isLoggedIn = true;
+        }
+
+        stickyNavbar($isLoggedIn);
+        ?>
 
         <!-- banner -->
         <div class="h-screen bg-[#F5F8FE] w-full pt-24 md:pt-0 relative overflow-hidden">

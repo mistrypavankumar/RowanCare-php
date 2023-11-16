@@ -2,6 +2,17 @@
 include 'db_connection.php';
 session_start();
 
+// Check if the login cookie exists
+if (isset($_COOKIE['rowanCarepatient'])) {
+    // Redirect
+    header("Location: patient/dashboard.php");
+    exit;
+} else if (isset($_COOKIE['rowanCaredoctor'])) {
+    // Redirect
+    header("Location: doctor/dashboard.php");
+    exit;
+}
+
 
 // Check if register value is set in session, if not, set to 'patient' as default
 if (!isset($_SESSION['register'])) {
@@ -35,19 +46,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($phoneNumber) && !empty($password) && !empty($confirmPassword)) {
-        if ($password != $confirmPassword) {
+        if ($password !== $confirmPassword) {
             $errorMessage = "X Password doen't match X";
         } else {
-            if ($register == "patient") {
-                $isResgisterSuccess = registerUser($conn, $firstName, $lastName, $phoneNumber, $email, $password);
+            $isResgisterSuccess = registerUser($conn, $firstName, $lastName, $phoneNumber, $email, $password, $register);
 
-                if ($isResgisterSuccess) {
-                    $successMessage = "Registered Successfully :) Login Now";
-                    $firstName = $lastName = $email = $phoneNumber = "";
-                    $password = $confirmPassword = "";
-                } else {
-                    $errorMessage = "User already exists.";
-                }
+            if ($isResgisterSuccess) {
+                $successMessage = "Registered Successfully :) Login Now";
+                $firstName = $lastName = $email = $phoneNumber = "";
+                $password = $confirmPassword = "";
+            } else {
+                $errorMessage = "User already exists.";
             }
         }
 
