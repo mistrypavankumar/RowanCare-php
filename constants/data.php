@@ -105,7 +105,7 @@ $doctorDashboardNav = [
   ],
   [
     'label' => "Profile Settings",
-    'path' => "",
+    'path' => "doctor-profile-settings.php",
     'icon' => "fa-cog",
   ],
   [
@@ -148,7 +148,7 @@ $patientDashboardNav = [
   ],
   [
     'label' => "Profile Settings",
-    'path' => "",
+    'path' => "patient-profile-settings.php",
     'icon' => "fa-cog",
   ],
   [
