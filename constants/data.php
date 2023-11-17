@@ -71,6 +71,100 @@ $bestDoctors = [
   ],
 ];
 
+
+$doctorDashboardNav = [
+  [
+    'label' => "Dashboard",
+    'path' => "doctor-dashboard.php",
+    'icon' => "fa-window-maximize",
+  ],
+  [
+    'label' => "Appointments",
+    'path' => "",
+    'icon' => "fa-calendar-check-o",
+  ],
+  [
+    'label' => "My Patients",
+    'path' => "",
+    'icon' => "fa-user-plus",
+  ],
+  [
+    'label' => "Schedule Timings",
+    'path' => "",
+    'icon' => "fa-hourglass-start",
+  ],
+  [
+    'label' => "Available Timings",
+    'path' => "",
+    'icon' => "fa-clock-o",
+  ],
+  [
+    'label' => "Invoices",
+    'path' => "",
+    'icon' => "fa-wpforms",
+  ],
+  [
+    'label' => "Profile Settings",
+    'path' => "",
+    'icon' => "fa-cog",
+  ],
+  [
+    'label' => "Change Password",
+    'path' => "",
+    'icon' => "fa-lock",
+  ],
+  [
+    'label' => "Logout",
+    'path' => "logout.php",
+    'icon' => "fa-sign-out",
+  ],
+];
+
+$patientDashboardNav = [
+  [
+    'label' => "Dashboard",
+    'path' => "patient-dashboard.php",
+    'icon' => "fa-window-maximize",
+  ],
+  [
+    'label' => "Book Appointment",
+    'path' => "book-appointment.php",
+    'icon' => "fa-calendar-check-o",
+  ],
+  [
+    'label' => "Orders",
+    'path' => "",
+    'icon' => "fa-user-plus",
+  ],
+  [
+    'label' => "Prescription",
+    'path' => "",
+    'icon' => "fa-hourglass-start",
+  ],
+  [
+    'label' => "Billing",
+    'path' => "",
+    'icon' => "fa-clock-o",
+  ],
+  [
+    'label' => "Profile Settings",
+    'path' => "",
+    'icon' => "fa-cog",
+  ],
+  [
+    'label' => "Change Password",
+    'path' => "",
+    'icon' => "fa-lock",
+  ],
+  [
+    'label' => "Logout",
+    'path' => "logout.php",
+    'icon' => "fa-sign-out",
+  ],
+];
+
+
+
 // default menu list
 class Menu
 {
