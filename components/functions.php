@@ -12,4 +12,17 @@ function listOfFooterLinks($title, $links = [], $mainDivStyle, $titleStyle, $sty
 
 }
 
+
+function textInputField($userData, $label, $textType, $value, $disabled = null)
+{
+    echo '
+    <div class="flex flex-col gap-2">
+        <label for="htmlFor">' . $label . '</label>
+        <input class="outline-none p-3 text-gray-500 rounded-md border-2" type="' . $textType . '"
+            name="' . $value . '" placeholder="Enter Your ' . $label . '" value="' . $userData[$value] .
+        '" ' . $disabled . ' required >
+    </div>
+    ';
+}
+
 ?>
