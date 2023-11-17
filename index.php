@@ -1,5 +1,5 @@
 <?php
-
+include 'db_connection.php';
 require "constants/data.php";
 ?>
 
@@ -28,6 +28,10 @@ require "constants/data.php";
         }
 
         stickyNavbar($isLoggedIn);
+
+        // get all doctors
+        $allDoctors = getAllDoctors($conn);
+
         ?>
 
         <!-- banner -->
@@ -49,7 +53,7 @@ require "constants/data.php";
 
                     <!-- Appointment button -->
                     <a class="text-center bg-[#0D57E3] hover:bg-[#0a43b0] duration-500   text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium"
-                        href="appointment.php">Get a
+                        href="book-appointment.php">Get a
                         Appointment</a>
                 </div>
                 <div class="flex justify-center items-center">
@@ -59,13 +63,13 @@ require "constants/data.php";
         </div>
 
         <!-- specialities -->
-        <div class="h-auto md:h-screen w-full bg-white">
+        <div class="h-auto w-full bg-white">
             <div class="w-[92%] md:w-[85%] mx-auto py-14">
                 <div class="flex justify-between items-center">
                     <h1 class="text-2xl md:text-4xl font-bold">Specialities</h1>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-10">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 py-10">
                     <?php
                     include 'components/specialitiesCard.php';
 
@@ -97,6 +101,16 @@ require "constants/data.php";
                             specialization: $bestDoctor['specialization'],
                             rating: $bestDoctor['rating'],
                             place: $bestDoctor['place']
+                        );
+                    }
+
+                    foreach ($allDoctors as $bestDoctor) {
+                        bestDoctorCard(
+                            image: "",
+                            doctorName: "Dr. " . $bestDoctor['firstName'] . " " . $bestDoctor["lastName"],
+                            specialization: "",
+                            rating: "",
+                            place: ""
                         );
                     }
 

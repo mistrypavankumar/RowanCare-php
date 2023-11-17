@@ -3,7 +3,7 @@ function bestDoctorCard(string $image, string $doctorName, string $specializatio
 {
     ?>
     <div class="overflow-hidden group cursor-pointer showdow-lg">
-        <div class="w-full overflow-hidden rounded-t-15 bg-white rounded-tl-lg rounded-tr-lg">
+        <div class="w-full h-[250px] overflow-hidden rounded-t-15 bg-white rounded-tl-lg rounded-tr-lg">
             <img class="w-full group-hover:scale-110 duration-300" src="<?php echo $image ?>" alt="">
         </div>
         <div class="p-3 bg-white rounded-bl-lg rounded-br-lg">

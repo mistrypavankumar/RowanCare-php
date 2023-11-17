@@ -120,4 +120,42 @@ function logout()
 
 
 
+
+function getUserData($conn, $userIdentifier, $userType)
+{
+    $sql = 'SELECT * FROM ' . $userType . " where email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $userIdentifier);
+    $stmt->execute();
+
+    // fetch the data
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $userData = $result->fetch_assoc();
+    } else {
+        $userData = null;
+    }
+
+    return $userData;
+}
+
+function getAllDoctors($conn)
+{
+    $sql = "SELECT * FROM doctor limit 6";
+    $result = $conn->query($sql);
+
+    if ($result === false) {
+        return false;
+    }
+
+    if ($result->num_rows > 0) {
+        $allDoctors = $result->fetch_all(MYSQLI_ASSOC);
+        return $allDoctors;
+    } else {
+        return array(); // if no doctors found
+    }
+}
+
+
+
 ?>
