@@ -5,7 +5,7 @@ function dashboardNavLink($color, $label, $icon, $path, $page)
     $activeStyle = $page === $path ? "text-[#0D57E3] " : "text-gray-500";
 
     echo '
-    <a class="' . $activeStyle . ' py-3 px-4 cursor-pointer border-t-2 hover:text-[' . $color['primary'] . ']
+    <a class="' . $activeStyle . ' p-4 cursor-pointer border-t-2 hover:text-[' . $color['primary'] . ']
      " href="' . $path . '"> <i class="fa ' . $icon . ' mr-1" aria-hidden="true"></i>
     ' . $label . '</a>
     ';
