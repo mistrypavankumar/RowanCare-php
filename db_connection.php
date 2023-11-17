@@ -156,6 +156,27 @@ function getAllDoctors($conn)
     }
 }
 
+function updatePatientProfile($conn, $userData, $dateOfBirth, $bloodGroup, $address, $city, $state, $country, $gender, $zipcode)
+{
+    $sql = "UPDATE patient SET dateOfBirth = ?, bloodGroup = ?, address = ?, city = ?, state = ?, country = ?, gender = ?, zipcode = ? WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt === false) {
+        return false;
+    }
+
+    $stmt->bind_param("sssssssss", $dateOfBirth, $bloodGroup, $address, $city, $state, $country, $gender, $zipcode, $userData['email']);
+
+    if ($stmt->execute()) {
+        $stmt->close();
+        return true;
+    } else {
+        $stmt->close();
+        return false;
+    }
+}
+
+
 
 
 ?>
