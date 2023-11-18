@@ -19,9 +19,20 @@ function dashboardNavigation($userData, $patientDashboardNav, $color, $userType)
     <div class="col-span-9 md:col-span-2 bg-white border-2 rounded-lg">
         <div class="flex w-full items-center justify-center py-10 flex-col space-y-2">
             <div class="bg-gray-100 w-[150px] h-[150px] rounded-full p-2 flex items-center">
-                <div class="rounded-full bg-red-500 overflow-hidden flex items-center">
-                    <img class="w-full h-full object-cover" src="" alt="profile-image">
-                </div>
+                <?php if (!empty($userData['image_path'])): ?>
+                    <div class="rounded-full bg-gray-200 overflow-hidden flex items-center">
+                        <img class="w-full object-cover" src="<?php echo $userData['image_path']; ?>" alt="Profile Image">
+                    </div>
+                <?php else: ?>
+                    <div class="rounded-full bg-gray-200 overflow-hidden flex items-center justify-center w-full h-full">
+                        <p class="text-xl font-bold text-gray-500">
+                            <?php
+                            require_once 'components/functions.php';
+                            echo getFirstLetter($userData['firstName']) ? getFirstLetter($userData['firstName']) : "DP";
+                            ?>
+                        </p>
+                    </div>
+                <?php endif; ?>
             </div>
             <?php
             if ($userType === 'patient') {

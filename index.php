@@ -105,13 +105,15 @@ require "constants/data.php";
                     }
 
                     foreach ($allDoctors as $bestDoctor) {
-                        bestDoctorCard(
-                            image: "",
-                            doctorName: "Dr. " . $bestDoctor['firstName'] . " " . $bestDoctor["lastName"],
-                            specialization: "",
-                            rating: "",
-                            place: ""
-                        );
+                        if (!empty($bestDoctor['image_path']) && !empty($bestDoctor['state'])) {
+                            bestDoctorCard(
+                                image: $bestDoctor['image_path'],
+                                doctorName: "Dr. " . $bestDoctor['firstName'] . " " . $bestDoctor["lastName"],
+                                specialization: "",
+                                rating: "4.5",
+                                place: $bestDoctor['state']
+                            );
+                        }
                     }
 
                     ?>

@@ -4,7 +4,69 @@ require "constants/data.php";
 require "components/getUserType.php";
 require 'components/functions.php';
 
+session_start();
 $result = getUserType();
+
+global $doctorData;
+
+// check weather user is present or not
+if (isset($_COOKIE['rowanCaredoctor'])) {
+    $userIdentifier = $_COOKIE['rowanCaredoctor'];
+    $userData = getUserData($conn, $userIdentifier, $result["userType"]);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $doctorData = [
+        'dateOfBirth' => $_POST['dateOfBirth'],
+        'addressLine1' => $_POST['addressLine1'],
+        'addressLine2' => $_POST['addressLine2'],
+        'city' => $_POST['city'],
+        'state' => $_POST['state'],
+        'country' => $_POST['country'],
+        'gender' => $_POST['gender'],
+        'zipcode' => $_POST['zipcode'],
+        'image_path' => '', // Set initially as empty
+    ];
+
+    $uploadOk = 1;
+    $target_dir = "uploads/";
+    if (isset($_FILES['file-upload']) && $_FILES['file-upload']['error'] == 0) {
+        $target_file = $target_dir . basename($_FILES["file-upload"]["name"]);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        // file size 5MB
+        if ($_FILES['file-upload']['size'] > 5000000) {
+            $uploadOk = 0;
+            $_SESSION['message'] = "Sorry, your file is too large.";
+        }
+
+        if (!in_array($imageFileType, ['jpg', 'png', 'jpeg'])) {
+            $uploadOk = 0;
+            $_SESSION['message'] = "Sorry, only JPG, JPEG, and PNG files are allowed.";
+        }
+
+        if ($uploadOk == 0) {
+            $_SESSION['message'] = "Sorry, your file was not uploaded.";
+        } else {
+            if (move_uploaded_file($_FILES["file-upload"]["tmp_name"], $target_file)) {
+                $doctorData['image_path'] = $target_file;
+            } else {
+                $_SESSION['message'] = "Sorry, there was an error uploading your file.";
+                header("Location: doctor-profile-settings.php");
+                exit();
+            }
+        }
+    }
+
+    $res = updateDoctorProfile($conn, $userData, $doctorData);
+
+    $_SESSION['message'] = $res ? "Updated profile successfully!" : "Failed to update profile. Please try again.";
+
+    header("Location: doctor-profile-settings.php");
+    exit();
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -20,16 +82,11 @@ $result = getUserType();
 <body>
     <!-- navbar -->
     <?php
-
-    // check weather user is present or not
-    if (isset($_COOKIE['rowanCaredoctor'])) {
-        $userIdentifier = $_COOKIE['rowanCaredoctor'];
-        $userData = getUserData($conn, $userIdentifier, $result["userType"]);
-    }
-
     require_once "components/navbar.php";
     stickyNavbar();
     ?>
+
+
 
     <!-- Banner -->
     <?php
@@ -41,11 +98,47 @@ $result = getUserType();
         <div class="grid grid-cols-1 md:grid-cols-9 my-20 gap-4">
             <?php
             require_once "components/dashboard-navigation.php";
-            dashboardNavigation($userData, $patientDashboardNav, $color, $result['userType']);
+            dashboardNavigation($userData, $doctorDashboardNav, $color, $result['userType']);
             ?>
-            <form method="POST" action="patient-profile-settings.php"
-                class="col-span-9 md:col-span-7 border-2 rounded-lg px-5 py-5">
-                <div>1</div>
+            <form method="POST" action="doctor-profile-settings.php"
+                class="col-span-9 md:col-span-7 border-2 rounded-lg px-5 py-5" enctype="multipart/form-data">
+                <div class="flex items-center gap-5 mb-5">
+                    <div class="w-24 h-24 bg-gray-200">
+                        <?php if (!empty($userData['image_path'])): ?>
+                            <img class="w-full object-cover" src="<?php echo $userData['image_path']; ?>"
+                                alt="Profile Image">
+                        <?php else: ?>
+                            <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <p class="text-xl font-bold text-gray-500">
+                                    <?php
+                                    echo getFirstLetter($userData['firstName']) ? getFirstLetter($userData['firstName']) : "DP";
+                                    ?>
+                                </p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div>
+
+                        <div class="p-4">
+                            <?php if (!empty($userData['image_path'])): ?>
+                                <div
+                                    class="bg-green-500 text-white px-4 py-3 rounded-lg cursor-pointer hover:bg-green-600 duration-500">
+                                    Edit Profile</div>
+                            <?php else: ?>
+                                <label for="file-upload"
+                                    class="flex items-center justify-center cursor-pointer bg-blue-500 hover:bg-blue-700 duration-500 text-white font-bold py-2 px-4 rounded">
+                                    <i class="fa fa-upload mr-2"></i>
+                                    <span>Upload Photo</span>
+                                    <input id="file-upload" name="file-upload" type="file" class="hidden"
+                                        onchange="updateFileName()" />
+                                </label>
+                                <span id="file-name" class="ml-2 text-sm text-gray-700 mt-2"></span>
+                                <p class="text-xs text-gray-500 mt-3">Allowed JPG, PNG and JPEG</p>
+                            <?php endif; ?>
+                        </div>
+
+                    </div>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="col-span-1 space-y-3">
 
@@ -119,8 +212,8 @@ $result = getUserType();
 
                 <div class="mt-5">
                     <button
-                        class="w-full md:w-fit text-center bg-green-500 hover:bg-green-600 duration-500 text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium"
-                        type="submit">Save Changes</button>
+                        class="w-full md:w-fit disabled:opacity-50  text-center bg-[<?php echo $color['primary'] ?>]/80 hover:bg-[<?php echo $color['primary'] ?>] duration-500 text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium"
+                        type="submit">>Save Changes</button>
                 </div>
             </form>
         </div>
@@ -135,18 +228,23 @@ $result = getUserType();
                 <?php echo $_SESSION['message']; ?>
             </p>
         </div>
-        <script>
-            const toaster = document.getElementById("toaster");
-            toaster.style.bottom = "12px";
-
-            setTimeout(() => {
-                toaster.style.bottom = "-100px";
-            }, 2000);
+        <script>         const toaster = document.getElementById("toaster"); toaster.style.bottom = "12px";
+            setTimeout(() => { toaster.style.bottom = "-100px"; }, 3000);
         </script>
 
         <?php unset($_SESSION['message']); ?>
     <?php endif; ?>
 
+
+    <script>
+        function updateFileName() {
+            var input = document.getElementById('file-upload');
+            var fileName = document.getElementById('file-name');
+            if (input.files.length > 0) {
+                fileName.textContent = input.files[0].name;
+            }
+        }
+    </script>
 
 </body>
 
