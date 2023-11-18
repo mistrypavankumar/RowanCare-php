@@ -176,6 +176,18 @@ function updatePatientProfile($conn, $userData, $dateOfBirth, $bloodGroup, $addr
     }
 }
 
+function updateDoctorProfile($conn, $userData, $doctorData)
+{
+    $sql = "UPDATE doctor SET dateOfBirth = ?, addressLine1 = ?, addressLine2 = ?, city = ?, state = ?, country = ?, gender = ?, zipcode = ?, image_path = ? WHERE email = ?";
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("ssssssssss", $doctorData['dateOfBirth'], $doctorData['addressLine1'], $doctorData['addressLine2'], $doctorData['city'], $doctorData['state'], $doctorData['country'], $doctorData['gender'], $doctorData['zipcode'], $doctorData['image_path'], $userData['email']);
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
+    }
+    return false;
+}
+
 
 
 

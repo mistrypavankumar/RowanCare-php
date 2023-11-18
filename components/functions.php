@@ -25,4 +25,23 @@ function textInputField($userData, $label, $textType, $value, $disabled = null)
     ';
 }
 
+
+function getFirstLetter($name)
+{
+    if (empty($name)) {
+        return "DP"; // Default initials
+    }
+
+    $words = explode(" ", $name);
+    $initials = '';
+
+    foreach ($words as $w) {
+        $initials .= mb_substr($w, 0, 1);
+    }
+
+    $initials = mb_substr($initials, 0, 2);
+
+    return strtoupper($initials);
+}
+
 ?>
