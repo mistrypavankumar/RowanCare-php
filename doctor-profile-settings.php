@@ -49,22 +49,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // file size 5MB
         if ($_FILES['doctor-file-upload']['size'] > 5000000) {
             $uploadOk = 0;
-            $_SESSION['message'] = "Sorry, your file is too large.";
+            $_SESSION['error_message'] = "Sorry, your file is too large.";
+            header("Location: doctor-profile-settings.php");
+            return;
         }
 
         if (!in_array($imageFileType, ['jpg', 'png', 'jpeg'])) {
             $uploadOk = 0;
-            $_SESSION['message'] = "Sorry, only JPG, JPEG, and PNG files are allowed.";
+            $_SESSION['error_message'] = "Sorry, only JPG, JPEG, and PNG files are allowed.";
+            header("Location: doctor-profile-settings.php");
+            return;
         }
 
         if ($uploadOk == 0) {
-            $_SESSION['message'] = "Sorry, your file was not uploaded.";
+            $_SESSION['error_message'] = "Sorry, your file was not uploaded.";
+            header("Location: doctor-profile-settings.php");
+            return;
         } else {
             if (move_uploaded_file($_FILES["doctor-file-upload"]["tmp_name"], $target_file)) {
                 $doctorData['image_path'] = $target_file;
                 $newFileUploaded = true;
             } else {
-                $_SESSION['message'] = "Sorry, there was an error uploading your file.";
+                $_SESSION['error_message'] = "Sorry, there was an error uploading your file.";
                 header("Location: doctor-profile-settings.php");
                 exit();
             }
@@ -77,7 +83,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $res = updateDoctorProfile($conn, $userData, $doctorData);
 
-    $_SESSION['message'] = $res ? "Updated profile successfully!" : "Failed to update profile. Please try again.";
+    if ($res) {
+        $_SESSION['success_message'] = "All profile details are successfully updated.";
+    } else {
+        $_SESSION['error_message'] = "Failed to update profile. Please try again.";
+    }
+
 
     header("Location: doctor-profile-settings.php");
     exit();
@@ -209,18 +220,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-    <?php if (!empty($_SESSION['message'])): ?>
-        <div id="toaster"
-            class="h-12 w-[350px] text-center bg-[<?php echo $color['primary'] ?>] text-white py-3 rounded-lg fixed bottom-[-100px] right-1/2 left-1/2 -translate-x-1/2 z-[99999] transition-all duration-500">
-            <p>
-                <?php echo $_SESSION['message']; ?>
+    <?php if (!empty($_SESSION['success_message']) || !empty($_SESSION['error_message'])): ?>
+        <div id="toaster" class="<?php echo !empty($_SESSION['success_message']) ? "bg-green-500" : "bg-red-500"; ?>
+ h-auto w-[350px] p-4 text-white rounded-lg fixed bottom-[-100px] right-2 z-[99999] transition-all duration-500">
+            <h2 class="text-xl mb-2">
+                <?php echo !empty($_SESSION['success_message']) ? "Success!" : "Error!"; ?>
+            </h2>
+            <p class="text-sm">
+                <?php echo !empty($_SESSION['success_message']) ? $_SESSION['success_message'] : $_SESSION['error_message']; ?>
             </p>
         </div>
-        <script>         const toaster = document.getElementById("toaster"); toaster.style.bottom = "12px";
-            setTimeout(() => { toaster.style.bottom = "-100px"; }, 3000);
+        <script>
+            const toaster = document.getElementById("toaster");
+            toaster.style.bottom = "12px";
+            setTimeout(() => {
+                toaster.style.bottom = "0";
+                toaster.style.right = "-100%";
+            }, 3000);
         </script>
 
-        <?php unset($_SESSION['message']); ?>
+        <?php unset($_SESSION['success_message']); ?>
+        <?php unset($_SESSION['error_message']); ?>
     <?php endif; ?>
 
 
