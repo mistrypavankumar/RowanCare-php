@@ -14,25 +14,75 @@ if (isset($_COOKIE['rowanCarepatient'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    $dateOfBirth = $_POST['dateOfBirth'];
-    $bloodGroup = $_POST['bloodGroup'];
-    $address = $_POST['address'];
-    $city = $_POST['city'];
-    $state = $_POST['state'];
-    $country = $_POST['country'];
-    $gender = $_POST['gender'];
-    $zipcode = $_POST['zipcode'];
+    $patientData = [
+        'dateOfBirth' => $_POST['dateOfBirth'],
+        'address' => $_POST['address'],
+        'bloodGroup' => $_POST['bloodGroup'],
+        'city' => $_POST['city'],
+        'state' => $_POST['state'],
+        'country' => $_POST['country'],
+        'gender' => $_POST['gender'],
+        'zipcode' => $_POST['zipcode'],
+        'image_path' => '', // Set initially as empty
+    ];
+
+    // no new profile is uploaded
+    $isNewFileUploaded = false;
+
+    $uploadOk = 1;
+    $target_dir = "uploads/patients/";
+    if (isset($_FILES['patient-file-upload']) && $_FILES['patient-file-upload']['error'] == 0) {
+        $target_file = $target_dir . basename($_FILES["patient-file-upload"]["name"]);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        // Generate a unique file name
+        $uniqueFileName = uniqid('doc_', true) . '.' . $imageFileType;
+        $target_file = $target_dir . $uniqueFileName;
 
 
-    $res = updatePatientProfile($conn, $userData, $dateOfBirth, $bloodGroup, $address, $city, $state, $country, $gender, $zipcode);
+        // Delete old image if exists
+        if (!empty($userData['image_path']) && file_exists($userData['image_path'])) {
+            unlink($userData['image_path']);
+        }
 
-    if ($res) {
-        $_SESSION['message'] = "Updated profile successfully!";
+        // file size 5MB
+        if ($_FILES['patient-file-upload']['size'] > 5000000) {
+            $uploadOk = 0;
+            $_SESSION['message'] = "Sorry, your file is too large.";
+        }
+
+        if (!in_array($imageFileType, ['jpg', 'png', 'jpeg'])) {
+            $uploadOk = 0;
+            $_SESSION['message'] = "Sorry, only JPG, JPEG, and PNG files are allowed.";
+        }
+
+        if ($uploadOk == 0) {
+            $_SESSION['message'] = "Sorry, your file was not uploaded.";
+        } else {
+            if (move_uploaded_file($_FILES["patient-file-upload"]["tmp_name"], $target_file)) {
+                $patientData['image_path'] = $target_file;
+                $isNewFileUploaded = true;
+            } else {
+                $_SESSION['message'] = "Sorry, there was an error uploading your file.";
+                header("Location: patient-profile-settings.php");
+                exit();
+            }
+        }
     } else {
-        $_SESSION['message'] = "Failed to update profile. Please try again.";
+        $_SESSION['message'] = "Sorry, there was an error uploading your file.";
     }
 
-    // Redirect to the same page
+    if (!$isNewFileUploaded && !empty($userData['image_path'])) {
+        $patientData['image_path'] = $userData['image_path'];
+        echo "iscomming";
+    } else {
+        echo "not comming";
+    }
+
+    $res = updatePatientProfile($conn, $userData, $patientData);
+
+    $_SESSION['message'] = $res ? "Updated profile successfully!" : "Failed to update profile. Please try again.";
+
     header("Location: patient-profile-settings.php");
     exit();
 
@@ -73,8 +123,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             dashboardNavigation($userData, $patientDashboardNav, $color, $result['userType']);
             ?>
             <form method="POST" action="patient-profile-settings.php"
-                class="col-span-9 md:col-span-7 border-2 rounded-lg px-5 py-5">
-                <div>1</div>
+                class="col-span-9 md:col-span-7 border-2 rounded-lg px-5 py-5" enctype="multipart/form-data">
+                <?php
+                require_once 'components/uploadProfile.php';
+                uploadProfile($userData, name: "patient-file-upload");
+                ?>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="col-span-1 space-y-3">
 
@@ -163,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
                 <div class="mt-5">
                     <button
-                        class="w-full md:w-fit text-center bg-green-500 hover:bg-green-600 duration-500 text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium"
+                        class="w-full md:w-fit disabled:opacity-50  text-center bg-[<?php echo $color['primary'] ?>]/80 hover:bg-[<?php echo $color['primary'] ?>] duration-500 text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium"
                         type="submit">Save Changes</button>
                 </div>
             </form>
@@ -179,19 +232,23 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 <?php echo $_SESSION['message']; ?>
             </p>
         </div>
-        <script>
-            const toaster = document.getElementById("toaster");
-            toaster.style.bottom = "12px";
-
-            setTimeout(() => {
-                toaster.style.bottom = "-100px";
-            }, 2000);
+        <script>         const toaster = document.getElementById("toaster"); toaster.style.bottom = "12px";
+            setTimeout(() => { toaster.style.bottom = "-100px"; }, 3000);
         </script>
 
         <?php unset($_SESSION['message']); ?>
     <?php endif; ?>
 
 
+    <script>
+        function updateFileName() {
+            var input = document.getElementById('patient-file-upload');
+            var fileName = document.getElementById('file-name');
+            if (input.files.length > 0) {
+                fileName.textContent = input.files[0].name;
+            }
+        }
+    </script>
 </body>
 
 </html>
