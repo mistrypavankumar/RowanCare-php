@@ -156,24 +156,16 @@ function getAllDoctors($conn)
     }
 }
 
-function updatePatientProfile($conn, $userData, $dateOfBirth, $bloodGroup, $address, $city, $state, $country, $gender, $zipcode)
+function updatePatientProfile($conn, $userData, $patientData)
 {
-    $sql = "UPDATE patient SET dateOfBirth = ?, bloodGroup = ?, address = ?, city = ?, state = ?, country = ?, gender = ?, zipcode = ? WHERE email = ?";
-    $stmt = $conn->prepare($sql);
-
-    if ($stmt === false) {
-        return false;
-    }
-
-    $stmt->bind_param("sssssssss", $dateOfBirth, $bloodGroup, $address, $city, $state, $country, $gender, $zipcode, $userData['email']);
-
-    if ($stmt->execute()) {
+    $sql = "UPDATE patient SET dateOfBirth = ?, address = ?, bloodGroup = ?, city = ?, state = ?, country = ?, gender = ?, zipcode = ?, image_path = ? WHERE email = ?";
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("ssssssssss", $patientData['dateOfBirth'], $patientData['address'], $patientData['bloodGroup'], $patientData['city'], $patientData['state'], $patientData['country'], $patientData['gender'], $patientData['zipcode'], $patientData['image_path'], $userData['email']);
+        $result = $stmt->execute();
         $stmt->close();
-        return true;
-    } else {
-        $stmt->close();
-        return false;
+        return $result;
     }
+    return false;
 }
 
 function updateDoctorProfile($conn, $userData, $doctorData)
