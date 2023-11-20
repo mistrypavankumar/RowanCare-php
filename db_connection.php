@@ -181,6 +181,20 @@ function updateDoctorProfile($conn, $userData, $doctorData)
 }
 
 
+function getAllSpecializations($conn)
+{
+    $sql = "SELECT * from specialization";
+    $result = $conn->query($sql);
+
+    if ($result === false) {
+        return false;
+    }
+
+    $specializations = $result->fetch_all(MYSQLI_ASSOC);
+    return $specializations;
+
+}
+
 
 
 ?>

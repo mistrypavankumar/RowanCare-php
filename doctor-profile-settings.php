@@ -28,52 +28,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'image_path' => '', // Set initially as empty
     ];
 
-    // no new profile is uploaded
     $newFileUploaded = false;
-
-    $uploadOk = 1;
     $target_dir = "uploads/doctors/";
-    if (isset($_FILES['doctor-file-upload']) && $_FILES['doctor-file-upload']['error'] == 0) {
-        $target_file = $target_dir . basename($_FILES["doctor-file-upload"]["name"]);
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        // Generate a unique file name
-        $uniqueFileName = uniqid('doc_', true) . '.' . $imageFileType;
+    if (isset($_FILES['doctor-file-upload'])) {
+        if ($_FILES['doctor-file-upload']['error'] != 0) {
+            $_SESSION['error_message'] = "File upload error: " . $_FILES['doctor-file-upload']['error'];
+            header("Location: doctor-profile-settings.php");
+            exit();
+        }
+
+        $imageFileType = strtolower(pathinfo($_FILES["doctor-file-upload"]["name"], PATHINFO_EXTENSION));
+        $uniqueFileName = uniqid('doctor_', true) . '.' . $imageFileType;
         $target_file = $target_dir . $uniqueFileName;
 
-        // Delete old image if exists
-        if (!empty($userData['image_path']) && file_exists($userData['image_path'])) {
-            unlink($userData['image_path']);
-        }
-
-        // file size 5MB
         if ($_FILES['doctor-file-upload']['size'] > 5000000) {
-            $uploadOk = 0;
             $_SESSION['error_message'] = "Sorry, your file is too large.";
-            header("Location: doctor-profile-settings.php");
-            return;
-        }
-
-        if (!in_array($imageFileType, ['jpg', 'png', 'jpeg'])) {
-            $uploadOk = 0;
+        } elseif (!in_array($imageFileType, ['jpg', 'png', 'jpeg'])) {
             $_SESSION['error_message'] = "Sorry, only JPG, JPEG, and PNG files are allowed.";
-            header("Location: doctor-profile-settings.php");
-            return;
-        }
-
-        if ($uploadOk == 0) {
-            $_SESSION['error_message'] = "Sorry, your file was not uploaded.";
-            header("Location: doctor-profile-settings.php");
-            return;
-        } else {
-            if (move_uploaded_file($_FILES["doctor-file-upload"]["tmp_name"], $target_file)) {
-                $doctorData['image_path'] = $target_file;
-                $newFileUploaded = true;
-            } else {
-                $_SESSION['error_message'] = "Sorry, there was an error uploading your file.";
-                header("Location: doctor-profile-settings.php");
-                exit();
+        } elseif (move_uploaded_file($_FILES["doctor-file-upload"]["tmp_name"], $target_file)) {
+            // Delete old image if exists
+            if (!empty($userData['image_path']) && file_exists($userData['image_path'])) {
+                unlink($userData['image_path']);
             }
+            $doctorData['image_path'] = $target_file;
+            $newFileUploaded = true;
+        } else {
+            $_SESSION['error_message'] = "Sorry, there was an error uploading your file.";
         }
     }
 
@@ -81,19 +62,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $doctorData['image_path'] = $userData['image_path'];
     }
 
-    $res = updateDoctorProfile($conn, $userData, $doctorData);
+    if (empty($_SESSION['error_message'])) {
+        $res = updateDoctorProfile($conn, $userData, $doctorData);
 
-    if ($res) {
-        $_SESSION['success_message'] = "All profile details are successfully updated.";
-    } else {
-        $_SESSION['error_message'] = "Failed to update profile. Please try again.";
+        if ($res) {
+            $_SESSION['success_message'] = "All profile details are successfully updated.";
+        } else {
+            $_SESSION['error_message'] = "Failed to update profile. Please try again";
+        }
     }
-
 
     header("Location: doctor-profile-settings.php");
     exit();
 }
-
 
 ?>
 
