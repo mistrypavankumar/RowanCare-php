@@ -168,14 +168,51 @@ function updatePatientProfile($conn, $userData, $patientData)
 
 function updateDoctorProfile($conn, $userData, $doctorData)
 {
-    $sql = "UPDATE doctor SET dateOfBirth = ?, addressLine1 = ?, addressLine2 = ?, city = ?, state = ?, country = ?, gender = ?, zipcode = ?, image_path = ? WHERE email = ?";
+    $sql = "UPDATE doctor SET dateOfBirth = ?, addressLine1 = ?, addressLine2 = ?, city = ?, state = ?, country = ?, gender = ?, zipcode = ?, image_path = ?, specialization = ? WHERE email = ?";
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("ssssssssss", $doctorData['dateOfBirth'], $doctorData['addressLine1'], $doctorData['addressLine2'], $doctorData['city'], $doctorData['state'], $doctorData['country'], $doctorData['gender'], $doctorData['zipcode'], $doctorData['image_path'], $userData['email']);
+        $stmt->bind_param("sssssssssss", $doctorData['dateOfBirth'], $doctorData['addressLine1'], $doctorData['addressLine2'], $doctorData['city'], $doctorData['state'], $doctorData['country'], $doctorData['gender'], $doctorData['zipcode'], $doctorData['image_path'], $doctorData['specialization'], $userData['email']);
+
         $result = $stmt->execute();
         $stmt->close();
         return $result;
     }
     return false;
+}
+
+function insertOrUpdateFreeRange($conn, $doctorId, $minFee, $maxFee)
+{
+    $select = "SELECT * FROM feeRange WHERE doctorId = ?";
+    $stmt = $conn->prepare($select);
+    $stmt->bind_param("i", $doctorId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $update = "UPDATE feerange SET minFee = ?, maxFee = ?";
+        $stmt = $conn->prepare($update);
+        $stmt->bind_param("ii", $minFee, $maxFee);
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        $sql = "INSERT INTO feerange (doctorId, minFee, maxFee) VALUES (?,?,?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iii", $doctorId, $minFee, $maxFee);
+        $stmt->execute();
+        $stmt->close();
+    }
+}
+
+function getFeeRange($conn, $doctorId)
+{
+    $sql = 'SELECT * FROM feeRange WHERE doctorId = ?';
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $doctorId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $feeRange = $result->fetch_assoc();
+    $stmt->close();
+
+    return $feeRange;
 }
 
 
