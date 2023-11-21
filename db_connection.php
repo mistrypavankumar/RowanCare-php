@@ -54,11 +54,9 @@ function registerUser($conn, $firstName, $lastName, $phoneNumber, $email, $passw
 
         // login the user
         loginUser($conn, $email, $password);
-
     } catch (Exception $err) {
         $conn->rollback();
         return false;
-
     }
 }
 
@@ -139,7 +137,7 @@ function getUserData($conn, $userIdentifier, $userType)
     return $userData;
 }
 
-function getAllDoctors($conn)
+function getBestSixDoctors($conn)
 {
     $sql = "SELECT * FROM doctor limit 6";
     $result = $conn->query($sql);
@@ -149,8 +147,8 @@ function getAllDoctors($conn)
     }
 
     if ($result->num_rows > 0) {
-        $allDoctors = $result->fetch_all(MYSQLI_ASSOC);
-        return $allDoctors;
+        $bestSixDoctors = $result->fetch_all(MYSQLI_ASSOC);
+        return $bestSixDoctors;
     } else {
         return array(); // if no doctors found
     }
@@ -192,9 +190,21 @@ function getAllSpecializations($conn)
 
     $specializations = $result->fetch_all(MYSQLI_ASSOC);
     return $specializations;
-
 }
 
+function getAllDoctors($conn)
+{
+    $sql = "SELECT * FROM doctor";
+    $result = $conn->query($sql);
 
+    if ($result === false) {
+        return false;
+    }
 
-?>
+    if ($result->num_rows > 0) {
+        $allDoctors = $result->fetch_all(MYSQLI_ASSOC);
+        return $allDoctors;
+    } else {
+        return array(); // if no doctors found
+    }
+}
