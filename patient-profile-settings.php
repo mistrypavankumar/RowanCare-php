@@ -26,73 +26,57 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         'image_path' => '', // Set initially as empty
     ];
 
-    // no new profile is uploaded
     $isNewFileUploaded = false;
-
-    $uploadOk = 1;
     $target_dir = "uploads/patients/";
-    if (isset($_FILES['patient-file-upload']) && $_FILES['patient-file-upload']['error'] == 0) {
+
+    if (isset($_FILES['patient-file-upload'])) {
+        if ($_FILES['patient-file-upload']['error'] != 0) {
+            $_SESSION['error_message'] = "File upload error: " . $_FILES['patient-file-upload']['error'];
+            header("Location: patient-profile-settings.php");
+            exit();
+        }
+
         $target_file = $target_dir . basename($_FILES["patient-file-upload"]["name"]);
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
         // Generate a unique file name
-        $uniqueFileName = uniqid('doc_', true) . '.' . $imageFileType;
+        $uniqueFileName = uniqid('patient_', true) . '.' . $imageFileType;
         $target_file = $target_dir . $uniqueFileName;
 
-        // Delete old image if exists
-        if (!empty($userData['image_path']) && file_exists($userData['image_path'])) {
-            unlink($userData['image_path']);
-        }
-
-        // file size 5MB
+        // Additional validations and file upload
         if ($_FILES['patient-file-upload']['size'] > 5000000) {
-            $uploadOk = 0;
             $_SESSION['error_message'] = "Sorry, your file is too large.";
-            header("Location: patient-profile-settings.php");
-            return;
-        }
-
-        if (!in_array($imageFileType, ['jpg', 'png', 'jpeg'])) {
-            $uploadOk = 0;
+        } elseif (!in_array($imageFileType, ['jpg', 'png', 'jpeg'])) {
             $_SESSION['error_message'] = "Sorry, only JPG, JPEG, and PNG files are allowed.";
-            header("Location: patient-profile-settings.php");
-            return;
-        }
-
-        if ($uploadOk == 0) {
-            $_SESSION['error_message'] = "Sorry, your file was not uploaded.";
-            header("Location: patient-profile-settings.php");
-            return;
-
-        } else {
-            if (move_uploaded_file($_FILES["patient-file-upload"]["tmp_name"], $target_file)) {
-                $patientData['image_path'] = $target_file;
-                $isNewFileUploaded = true;
-            } else {
-                $_SESSION['error_message'] = "Sorry, there was an error uploading your file.";
-                header("Location: patient-profile-settings.php");
-                exit();
+        } elseif (move_uploaded_file($_FILES["patient-file-upload"]["tmp_name"], $target_file)) {
+            // Delete old image if exists
+            if (!empty($userData['image_path']) && file_exists($userData['image_path'])) {
+                unlink($userData['image_path']);
             }
+            $patientData['image_path'] = $target_file;
+            $isNewFileUploaded = true;
+        } else {
+            $_SESSION['error_message'] = "Sorry, there was an error uploading your file.";
         }
-    } else {
-        $_SESSION['error_message'] = "Sorry, there was an error uploading your file.";
     }
 
     if (!$isNewFileUploaded && !empty($userData['image_path'])) {
         $patientData['image_path'] = $userData['image_path'];
     }
 
-    $res = updatePatientProfile($conn, $userData, $patientData);
+    // Process patient data
+    if (empty($_SESSION['error_message'])) {
+        $res = updatePatientProfile($conn, $userData, $patientData);
 
-    if ($res) {
-        $_SESSION['success_message'] = "All profile details are successfully updated.";
-    } else {
-        $_SESSION['error_message'] = "Failed to update profile. Please try again";
+        if ($res) {
+            $_SESSION['success_message'] = "All profile details are successfully updated.";
+        } else {
+            $_SESSION['error_message'] = "Failed to update profile. Please try again";
+        }
     }
 
     header("Location: patient-profile-settings.php");
     exit();
-
 }
 
 ?>
