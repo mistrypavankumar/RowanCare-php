@@ -30,18 +30,16 @@ require "constants/data.php";
         stickyNavbar($isLoggedIn);
 
         // get all doctors
-        $allDoctors = getAllDoctors($conn);
+        $allBestSixDoctors = getBestSixDoctors($conn);
 
         ?>
 
         <!-- banner -->
         <div class="h-screen bg-[#F5F8FE] w-full pt-24 md:pt-0 relative overflow-hidden">
             <img class="w-full absolute" src="./assets/images/bg-design.png" alt="banner-bg-img">
-            <div
-                class="w-[92%] md:w-[85%] mx-auto flex flex-col md:flex-row justify-center items-center h-full gap-10 relative z-10">
+            <div class="w-[92%] md:w-[85%] mx-auto flex flex-col md:flex-row justify-center items-center h-full gap-10 relative z-10">
                 <div class="flex-col items-center">
-                    <h1
-                        class="text-3xl text-center sm:text-left sm:text-5xl w-full md:w-[75%] font-semibold pb-5 md:pb-7">
+                    <h1 class="text-3xl text-center sm:text-left sm:text-5xl w-full md:w-[75%] font-semibold pb-5 md:pb-7">
                         Consult
                         <span class="text-[#0D57E3]">Best
                             Doctors</span>
@@ -52,8 +50,7 @@ require "constants/data.php";
                     </p>
 
                     <!-- Appointment button -->
-                    <a class="text-center bg-[#0D57E3] hover:bg-[#0a43b0] duration-500   text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium"
-                        href="book-appointment.php">Get a
+                    <a class="text-center bg-[#0D57E3] hover:bg-[#0a43b0] duration-500   text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium" href="book-appointment.php">Get a
                         Appointment</a>
                 </div>
                 <div class="flex justify-center items-center">
@@ -104,7 +101,7 @@ require "constants/data.php";
                         );
                     }
 
-                    foreach ($allDoctors as $bestDoctor) {
+                    foreach ($allBestSixDoctors as $bestDoctor) {
                         if (!empty($bestDoctor['image_path']) && !empty($bestDoctor['state'])) {
                             bestDoctorCard(
                                 image: $bestDoctor['image_path'],
