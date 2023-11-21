@@ -15,6 +15,13 @@ $specialities = [
   ['dark' => './assets/icons/dark/specialities-06.svg', 'light' => './assets/icons/light/specialities-06.svg', 'name' => 'Ophthalmology']
 ];
 
+$feeRanges = [
+  ['fee' => '100-200'],
+  ['fee' => '200-300'],
+  ['fee' => '300-400'],
+  ['fee' => '400-500'],
+];
+
 
 $bestDoctors = [
   [
@@ -181,6 +188,4 @@ class Menu
 $menuList = [
   new Menu("Home", "/"),
   new Menu("Pharmacy", "/pharmacy")
-]
-
-  ?>
+];

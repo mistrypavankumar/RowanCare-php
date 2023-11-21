@@ -1,6 +1,6 @@
 <?php
 
-function doctorCard($doctorData, $firstLetters, $color)
+function doctorCard($doctorData, $firstLetters, $color, $feeRange)
 {
 ?>
     <div class="h-auto col-span-9 md:col-span-7 border-2 rounded-lg p-6">
@@ -20,7 +20,7 @@ function doctorCard($doctorData, $firstLetters, $color)
                     <p class="text-gray-500">desljsljf lakjfl ajsldfj alfdjl</p>
                     <div class="w-4 h-4 flex items-center gap-2 mt-4 -ml-20 md:-ml-0">
                         <img class="w-full object-cover" src="assets/icons/dark/specialities-01.svg" alt="icon">
-                        <p class="text-[<?php echo $color["primary"] ?>] font-medium">Dentist</p>
+                        <p class="text-[<?php echo $color["primary"] ?>] font-medium"><?php echo $doctorData['specialization'] ?></p>
                     </div>
                     <p class="text-gray-500 mt-2">
                         Rating <span class="text-black font-medium">(35)</span>
@@ -46,7 +46,15 @@ function doctorCard($doctorData, $firstLetters, $color)
                 </div>
                 <div class="flex gap-2 items-center">
                     <i class="fa fa-money" aria-hidden="true"></i>
-                    <span>$100 - 200</span>
+                    <span><?php if ($feeRange) {
+                                echo "$" . $feeRange['minFee'];
+
+                                if (!empty($feeRange['maxFee'])) {
+                                    echo " - " . $feeRange['maxFee'];
+                                }
+                            } else {
+                                echo "Not provided";
+                            } ?></span>
                 </div>
 
                 <div class="flex flex-col w-full gap-4 mt-5">

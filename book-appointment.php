@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <div class="grid col-span-9 md:col-span-7 gap-4">
                     <?php foreach ($getAllDoctors as $doctor) : ?>
                         <?php if (!empty($doctor["state"]) && !empty($doctor['country'])) : ?>
-                            <?php echo doctorCard(doctorData: $doctor, firstLetters: getFirstLetter($doctor['firstName']), color: $color) ?>
+                            <?php echo doctorCard(doctorData: $doctor, firstLetters: getFirstLetter($doctor['firstName']), color: $color, feeRange: getFeeRange($conn, $doctor['doctorId'])) ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
