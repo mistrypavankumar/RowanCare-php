@@ -179,40 +179,67 @@ function updateDoctorProfile($conn, $userData, $doctorData)
     return false;
 }
 
-function insertOrUpdateFreeRange($conn, $doctorId, $minFee, $maxFee)
+function insertOrUpdateFeeRange($conn, $doctorId, $minFee, $maxFee)
 {
-    $select = "SELECT * FROM feeRange WHERE doctorId = ?";
+    $select = "SELECT * FROM feerange WHERE doctorId = ?";
     $stmt = $conn->prepare($select);
+    if (!$stmt) {
+        return false;
+    }
+
     $stmt->bind_param("i", $doctorId);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        $update = "UPDATE feerange SET minFee = ?, maxFee = ?";
+        $update = "UPDATE feerange SET minFee = ?, maxFee = ? WHERE doctorId = ?";
         $stmt = $conn->prepare($update);
-        $stmt->bind_param("ii", $minFee, $maxFee);
-        $stmt->execute();
-        $stmt->close();
+        if (!$stmt) {
+            return false;
+        }
+
+        $stmt->bind_param("iii", $minFee, $maxFee, $doctorId);
     } else {
-        $sql = "INSERT INTO feerange (doctorId, minFee, maxFee) VALUES (?,?,?)";
-        $stmt = $conn->prepare($sql);
+        $insert = "INSERT INTO feerange (doctorId, minFee, maxFee) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($insert);
+        if (!$stmt) {
+            return false;
+        }
+
         $stmt->bind_param("iii", $doctorId, $minFee, $maxFee);
-        $stmt->execute();
-        $stmt->close();
     }
+
+    if (!$stmt->execute()) {
+        return false;
+    }
+
+    $stmt->close();
+    return true;
 }
+
 
 function getFeeRange($conn, $doctorId)
 {
-    $sql = 'SELECT * FROM feeRange WHERE doctorId = ?';
+    $sql = 'SELECT * FROM feerange WHERE doctorId = ?';
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $doctorId);
-    $stmt->execute();
+
+    if (!$stmt) {
+        return [];
+    }
+
+    $stmt->bind_param('i', $doctorId);
+
+    if (!$stmt->execute()) {
+        return [];
+    }
+
     $result = $stmt->get_result();
-    $feeRange = $result->fetch_assoc();
+
+    $feerange = $result->fetch_assoc();
+
     $stmt->close();
 
-    return $feeRange;
+    return $feerange;
 }
 
 
