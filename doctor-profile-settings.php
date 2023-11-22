@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($_SESSION['error_message'])) {
         $res = updateDoctorProfile($conn, $userData, $doctorData);
-        $fee = insertOrUpdateFreeRange(conn: $conn, doctorId: $userData['doctorId'], minFee: $feeRanges['min'], maxFee: $feeRanges['max']);
+        $fee = insertOrUpdateFeeRange(conn: $conn, doctorId: $userData['doctorId'], minFee: $feeRanges['min'], maxFee: $feeRanges['max']);
 
         if ($res) {
             $_SESSION['success_message'] = "All profile details are successfully updated.";
