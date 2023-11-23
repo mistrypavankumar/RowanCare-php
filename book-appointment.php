@@ -2,6 +2,7 @@
 
 include 'db_connection.php';
 require 'constants/data.php';
+require 'components/functions.php';
 
 $doctorId = $_GET['doctorId'];
 $doctorData = getDoctorDetailsById($conn, $doctorId);
@@ -9,6 +10,8 @@ $doctorData = getDoctorDetailsById($conn, $doctorId);
 $doctorName = $doctorData['firstName'] . " " . $doctorData['lastName'];
 $location = $doctorData['state'] . ", " . $doctorData['country'];
 $doctorImage = $doctorData['image_path'];
+
+$firstLetters = getFirstLetter($doctorData['firstName']);
 
 
 $days = [
@@ -69,9 +72,15 @@ function timeButton($time, $day)
         <div class="w-[92%] md:w-[85%] mx-auto py-20">
             <div class="flex flex-col gap-4">
                 <div class="flex w-full border-2 rounded-lg p-6 gap-4">
-                    <div class="w-[100px] h-[100px] overflow-hidden rounded-md">
-                        <img class="w-full object-cover" src="<?php echo $doctorImage; ?>" alt="doctor-profile">
-                    </div>
+                    <?php if (!empty($doctorImage)) : ?>
+                        <div class="w-[100px] h-[100px] overflow-hidden rounded-md">
+                            <img class="w-full object-cover" src="<?php echo $doctorImage ?>" alt="doctor" srcset="">
+                        </div>
+                    <?php else : ?>
+                        <div class="w-[100px] h-[100px] overflow-hidden rounded-lg bg-gray-200 flex items-center justify-center">
+                            <h1 class="font-bold text-2xl text-gray-500"><?php echo $firstLetters ?></h1>
+                        </div>
+                    <?php endif; ?>
                     <div class="flex flex-col gap-1">
                         <h1 class="text-xl font-medium"><?php echo $doctorName; ?></h1>
                         <p class="text-gray-500">Rating <span class="text-black">(35)</span></p>
