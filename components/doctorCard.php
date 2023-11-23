@@ -58,9 +58,9 @@ function doctorCard($doctorData, $firstLetters, $color, $feeRange)
                 </div>
 
                 <div class="flex flex-col w-full gap-4 mt-5">
-                    <a class="text-center border-2 rounded-lg border-[<?php echo $color['primary'] ?>] text-[<?php echo $color['primary'] ?>] w-full py-2 font-semibold hover:bg-[<?php echo $color['primary'] ?>] hover:text-white duration-500" href="doctor-profile-view">View Profile</a>
+                    <a class="text-center border-2 rounded-lg border-[<?php echo $color['primary'] ?>] text-[<?php echo $color['primary'] ?>] w-full py-2 font-semibold hover:bg-[<?php echo $color['primary'] ?>] hover:text-white duration-500" href="view-doctor-details.php?doctorId=<?php echo $doctorData['doctorId'] ?>">View Profile</a>
 
-                    <a class="text-center border-2 rounded-lg border-[<?php echo $color['primary'] ?>] bg-[<?php echo $color['primary'] ?>] w-full py-2 font-semibold text-white" href="doctor-profile-view">Book Appointment</a>
+                    <a class="text-center border-2 rounded-lg border-[<?php echo $color['primary'] ?>] bg-[<?php echo $color['primary'] ?>] w-full py-2 font-semibold text-white" href="book-appointment.php?doctorId=<?php echo $doctorData['doctorId'] ?>">Book Appointment</a>
                 </div>
             </div>
         </div>
