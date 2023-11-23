@@ -8,6 +8,7 @@ $doctorData = getDoctorDetailsById($conn, $doctorId);
 
 $doctorName = $doctorData['firstName'] . " " . $doctorData['lastName'];
 $location = $doctorData['state'] . ", " . $doctorData['country'];
+$doctorImage = $doctorData['image_path'];
 
 
 $days = [
@@ -69,7 +70,7 @@ function timeButton($time, $day)
             <div class="flex flex-col gap-4">
                 <div class="flex w-full border-2 rounded-lg p-6 gap-4">
                     <div class="w-[100px] h-[100px] overflow-hidden rounded-md">
-                        <img class="w-full object-cover" src="assets/images/d1.png" alt="doctor-profile">
+                        <img class="w-full object-cover" src="<?php echo $doctorImage; ?>" alt="doctor-profile">
                     </div>
                     <div class="flex flex-col gap-1">
                         <h1 class="text-xl font-medium"><?php echo $doctorName; ?></h1>
@@ -88,7 +89,7 @@ function timeButton($time, $day)
 
                 </div>
                 <div class="w-full border-2 px-5 py-6 rounded-lg">
-                    <form class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 items-end" action="book-appointment.php?doctorId=<?php echo $doctorId; ?>" method="GET">
+                    <form class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 items-end" action="" method="POST">
                         <div class="flex flex-col gap-2">
                             <label for="date">Appointment Date</label>
                             <input class="outline-none p-3 rounded-md border-2 text-gray-500" type="date" name="appointmentDate" id="appointmentDate">
