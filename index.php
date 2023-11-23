@@ -50,7 +50,7 @@ require "constants/data.php";
                     </p>
 
                     <!-- Appointment button -->
-                    <a class="text-center bg-[#0D57E3] hover:bg-[#0a43b0] duration-500   text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium" href="book-appointment.php">Get a
+                    <a class="text-center bg-[#0D57E3] hover:bg-[#0a43b0] duration-500   text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium" href="search-appointment.php">Get a
                         Appointment</a>
                 </div>
                 <div class="flex justify-center items-center">

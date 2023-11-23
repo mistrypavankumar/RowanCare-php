@@ -272,3 +272,25 @@ function getAllDoctors($conn)
         return array(); // if no doctors found
     }
 }
+
+function getDoctorDetailsById($conn, $doctorId)
+{
+    $sql = 'SELECT * FROM doctor WHERE doctorId = ?';
+    $stmt = $conn->prepare($sql);
+
+    if (!$stmt) {
+        return [];
+    }
+
+    $stmt->bind_param('i', $doctorId);
+
+    if (!$stmt->execute()) {
+        return [];
+    }
+
+    $result = $stmt->get_result();
+    $details = $result->fetch_assoc();
+    $stmt->close();
+
+    return $details;
+}
