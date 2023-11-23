@@ -294,3 +294,22 @@ function getDoctorDetailsById($conn, $doctorId)
 
     return $details;
 }
+
+function removeProfile($conn, $userType, $userId)
+{
+    $sql = "UPDATE " . $userType . " SET image_path = null where " . $userType . "Id = ?";
+    $stmt = $conn->prepare($sql);
+
+    if (!$stmt) {
+        return false;
+    }
+
+    $stmt->bind_param('i', $userId);
+
+    if (!$stmt->execute()) {
+        return false;
+    }
+
+    $stmt->close();
+    return true;
+}

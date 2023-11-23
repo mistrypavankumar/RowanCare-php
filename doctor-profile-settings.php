@@ -69,16 +69,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $doctorData['image_path'] = $userData['image_path'];
     }
 
-    if (empty($_SESSION['error_message'])) {
-        $res = updateDoctorProfile($conn, $userData, $doctorData);
-        $fee = insertOrUpdateFeeRange(conn: $conn, doctorId: $userData['doctorId'], minFee: $feeRanges['min'], maxFee: $feeRanges['max']);
+
+
+    if ($_POST['action'] === 'removeProfile') {
+        $res = removeProfile($conn, userType: "doctor", userId: $userData['doctorId']);
 
         if ($res) {
-            $_SESSION['success_message'] = "All profile details are successfully updated.";
+            $_SESSION['success_message'] = "Profile is removed successfully";
         } else {
-            $_SESSION['error_message'] = $conn->error;
+            $_SESSION['error_message'] = "Error in removing profile </br>" . $conn->error;
+        }
+    } else {
+        if (empty($_SESSION['error_message'])) {
+            $res = updateDoctorProfile($conn, $userData, $doctorData);
+            $fee = insertOrUpdateFeeRange(conn: $conn, doctorId: $userData['doctorId'], minFee: $feeRanges['min'], maxFee: $feeRanges['max']);
+
+            if ($res) {
+                $_SESSION['success_message'] = "All profile details are successfully updated.";
+            } else {
+                $_SESSION['error_message'] = $conn->error;
+            }
         }
     }
+
 
     header("Location: doctor-profile-settings.php");
     exit();
@@ -118,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             dashboardNavigation($userData, $doctorDashboardNav, $color, $result['userType']);
             ?>
             <div class="col-span-9 md:col-span-7">
-                <form method="POST" action="doctor-profile-settings.php" class="grid gap-4" enctype="multipart/form-data">
+                <form id="doctorProfileForm" method="POST" action="doctor-profile-settings.php" class="grid gap-4" enctype="multipart/form-data">
                     <div class="border-2 rounded-lg px-5 py-5">
                         <div>
                             <h1 class="text-2xl md:text-3xl font-bold mb-7">Profile Information</h1>
@@ -231,6 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" name="action" id="doctorFormAction" value="saveChanges">
                     <div class=" mt-5">
                         <button class="w-full md:w-fit disabled:opacity-50  text-center bg-[<?php echo $color['primary'] ?>]/80 hover:bg-[<?php echo $color['primary'] ?>] duration-500 text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium" type="submit">Save Changes</button>
                     </div>
@@ -254,6 +268,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 fileName.textContent = input.files[0].name;
             }
         }
+
+        document.getElementById("removeProfileBtn").addEventListener('click', function() {
+            document.getElementById("doctorFormAction").value = "removeProfile";
+            document.getElementById('doctorProfileForm').submit();
+        });
     </script>
 
 </body>
