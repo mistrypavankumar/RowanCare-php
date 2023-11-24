@@ -4,6 +4,8 @@ include 'db_connection.php';
 require 'constants/data.php';
 require 'components/functions.php';
 
+session_start();
+
 $doctorId = $_GET['doctorId'];
 $doctorData = getDoctorDetailsById($conn, $doctorId);
 
@@ -14,15 +16,33 @@ $doctorImage = $doctorData['image_path'];
 $firstLetters = getFirstLetter($doctorData['firstName']);
 
 
-$days = [
-    "Monday",
-    "Tusday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-];
+global $isPatient;
+
+if (!isset($_COOKIE['rowanCarepatient'])) {
+    $isPatient = true;
+} else {
+    $isPatient = false;
+}
+
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $appointmentDate = $_POST['appointmentDate'];
+    $appointmentTime = $_POST['appointmentTime'];
+
+    if (!empty($appointmentDate) && !empty($appointmentTime)) {
+        // Check if the login cookie exists
+        if (!isset($_COOKIE['rowanCarepatient'])) {
+            $_SESSION['error_message'] = "Sorry! </br>Please login as patient to book appointment";
+        } else {
+            // Redirect
+            header("Location: appointment-payment.php?doctorId=" . urlencode($_GET['doctorId']) . "&appointmentDate=" . urlencode($appointmentDate) . "&appointmentTime=" . urlencode($appointmentTime));
+            exit();
+        }
+    }
+}
+
 
 function timeButton($time, $day)
 {
@@ -71,6 +91,11 @@ function timeButton($time, $day)
 
         <div class="w-[92%] md:w-[85%] mx-auto py-20">
             <div class="flex flex-col gap-4">
+                <?php if ($isPatient) : ?>
+                    <div class="flex w-full border-2 border-red-500 rounded-lg px-6 py-2 gap-4">
+                        <p class="text-red-500">Please make sure you login as patient, if not you won't be able to make appointment!!</p>
+                    </div>
+                <?php endif; ?>
                 <div class="flex w-full border-2 rounded-lg p-6 gap-4">
                     <?php if (!empty($doctorImage)) : ?>
                         <div class="w-[100px] h-[100px] overflow-hidden rounded-md">
@@ -92,28 +117,29 @@ function timeButton($time, $day)
                 </div>
                 <div class="mt-3 flex justify-between">
                     <div>
-                        <h1 class="font-medium text-xl">11 November, 2023</h1>
-                        <p class="text-gray-500">Monday</p>
+                        <h1 id="currentDate" class="font-medium text-xl"></h1>
+                        <p id="currentDay" class="text-gray-500"></p>
                     </div>
 
                 </div>
                 <div class="w-full border-2 px-5 py-6 rounded-lg">
-                    <form class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 items-end" action="" method="POST">
+                    <form id="appointmentForm" class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 items-end" action="" method="POST">
                         <div class="flex flex-col gap-2">
-                            <label for="date">Appointment Date</label>
-                            <input class="outline-none p-3 rounded-md border-2 text-gray-500" type="date" name="appointmentDate" id="appointmentDate">
+                            <label for="appointmentDate">Appointment Date</label>
+                            <input class="outline-none p-3 rounded-md border-2 text-gray-500" type="date" name="appointmentDate" id="appointmentDate" required>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label for="specialization">Appointment Time</label>
-                            <select class="outline-none p-3 rounded-md border-2 text-gray-500" name="specialization" id="specialization">
-                                <option value="">Select appointment time</option>
+                            <label for="appointmentTime">Appointment Time</label>
+                            <select class="outline-none p-3 rounded-md border-2 text-gray-500" name="appointmentTime" id="appointmentTime" required>
+                                <option value="">Select your appointment time</option>
                                 <option value="9:00AM">9:00AM</option>
                                 <option value="10:00AM">10:00AM</option>
                                 <option value="11:00AM">11:00AM</option>
                             </select>
                         </div>
+
                         <div class="w-full">
-                            <button type="submit" class="w-full text-center bg-[#0D57E3] hover:bg-[#0a43b0] duration-500   text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium">Make Appointment</button>
+                            <button id="makeAppointmentBtn" type="submit" class="w-full text-center bg-[#0D57E3] hover:bg-[#0a43b0] duration-500   text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium">Proceed to pay</button>
                         </div>
                     </form>
                 </div>
@@ -121,9 +147,19 @@ function timeButton($time, $day)
         </div>
     </main>
 
-    <script>
 
-    </script>
+    <!-- footer -->
+    <?php
+    require_once "components/footer.php";
+    footer();
+    ?>
+
+    <?php
+    require_once 'components/toaster.php';
+    ?>
+
+    <script src="js/scripts.js?v=1"></script>
+
 
 </body>
 

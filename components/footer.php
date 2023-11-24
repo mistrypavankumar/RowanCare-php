@@ -1,7 +1,7 @@
 <?php
 function footer()
 {
-    ?>
+?>
 
     <div class="h-auto bg-[#F5F8FE] border-t-2 py-5">
         <div class="w-[92%] md:w-[85%] mx-auto flex flex-col md:flex-row py-7">
@@ -25,7 +25,7 @@ function footer()
                 $titleStyle = "text-xl font-semibold mb-2";
 
                 $patientLinks = [
-                    "Search for Doctors" => "#search",
+                    "Search for Doctors" => "search-appointment.php",
                     "Login" => "login.php",
                     "Register" => "register.php"
                 ];
@@ -63,34 +63,27 @@ function footer()
                 <div class="flex flex-col mt-5 md:mt-0">
                     <h2 class="text-xl font-semibold mb-2">Join Our Newsletter</h2>
                     <div class="flex items-center w-full mt-2">
-                        <input class="outline-none py-3 px-2 w-full rounded-tl-md rounded-bl-md" type="email"
-                            placeholder="Enter Email">
-                        <button
-                            class="bg-[#0D57E3] text-white py-3 px-2 rounded-tr-md rounded-br-md hover:bg-[#0a43b0] duration-300">Submit</button>
+                        <input class="outline-none py-3 px-2 w-full rounded-tl-md rounded-bl-md" type="email" placeholder="Enter Email">
+                        <button class="bg-[#0D57E3] text-white py-3 px-2 rounded-tr-md rounded-br-md hover:bg-[#0a43b0] duration-300">Submit</button>
                     </div>
                     <div class="flex items-center gap-5 mt-5">
                         <a href="#">
-                            <i class="fa fa-instagram text-gray-500 hover:text-[#0D57E3] cursor-pointer text-xl duration-300"
-                                aria-hidden="true"></i>
+                            <i class="fa fa-instagram text-gray-500 hover:text-[#0D57E3] cursor-pointer text-xl duration-300" aria-hidden="true"></i>
                         </a>
                         <a href="#">
-                            <i class="fa fa-facebook text-gray-500 hover:text-[#0D57E3] cursor-pointer text-xl duration-300"
-                                aria-hidden="true"></i>
+                            <i class="fa fa-facebook text-gray-500 hover:text-[#0D57E3] cursor-pointer text-xl duration-300" aria-hidden="true"></i>
                         </a>
                         <a href="#">
-                            <i class="fa fa-envelope text-gray-500 hover:text-[#0D57E3] cursor-pointer text-xl duration-300"
-                                aria-hidden="true"></i>
+                            <i class="fa fa-envelope text-gray-500 hover:text-[#0D57E3] cursor-pointer text-xl duration-300" aria-hidden="true"></i>
                         </a>
                         <a href="#">
-                            <i class="fa fa-twitter text-gray-500 hover:text-[#0D57E3] cursor-pointer text-xl duration-300"
-                                aria-hidden="true"></i>
+                            <i class="fa fa-twitter text-gray-500 hover:text-[#0D57E3] cursor-pointer text-xl duration-300" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-        <div
-            class="border-t-2 w-[92%] md:w-[85%] mx-auto pt-7 pb-3 flex flex-col text-center gap-3 md:flex-row justify-between">
+        <div class="border-t-2 w-[92%] md:w-[85%] mx-auto pt-7 pb-3 flex flex-col text-center gap-3 md:flex-row justify-between">
             <p class="text-gray-500 text-sm">Copyright © 2023 <span class="font-semibold text-black">Mistry Pavan
                     Kumar</span>. All
                 Rights

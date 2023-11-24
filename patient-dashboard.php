@@ -21,7 +21,7 @@ $result = getUserType();
     <?php
     $pageTitle = "RowanCare | Patient";
     require_once "components/header.php"
-        ?>
+    ?>
 </head>
 
 <body>
@@ -35,7 +35,7 @@ $result = getUserType();
             $userData = getUserData($conn, $userIdentifier, $result["userType"]);
         }
 
-        ?>
+    ?>
 
         <?php require_once "components/navbar.php";
         stickyNavbar();
@@ -63,10 +63,16 @@ $result = getUserType();
 
         </main>
 
+
+        <!-- footer -->
         <?php
+        require_once "components/footer.php";
+        footer();
+        ?>
+
+    <?php
     } else {
         echo "loading..." . $userType . $userIdentifier;
-
     }
     ?>
 </body>
