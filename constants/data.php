@@ -135,7 +135,7 @@ $patientDashboardNav = [
   ],
   [
     'label' => "Book Appointment",
-    'path' => "book-appointment.php",
+    'path' => "search-appointment.php",
     'icon' => "fa-calendar-check-o",
   ],
   [

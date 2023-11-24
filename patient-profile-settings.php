@@ -5,12 +5,16 @@ require "components/getUserType.php";
 require "components/functions.php";
 
 session_start();
+
 $result = getUserType();
 
 // check weather user is present or not
 if (isset($_COOKIE['rowanCarepatient'])) {
     $userIdentifier = $_COOKIE['rowanCarepatient'];
     $userData = getUserData($conn, $userIdentifier, $result["userType"]);
+} else {
+    header("Location: page-not-found.php");
+    exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -222,6 +226,13 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             </div>
         </div>
     </div>
+
+
+    <!-- footer -->
+    <?php
+    require_once "components/footer.php";
+    footer();
+    ?>
 
 
     <?php

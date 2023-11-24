@@ -5,11 +5,11 @@ session_start();
 // Check if the login cookie exists
 if (isset($_COOKIE['rowanCarepatient'])) {
     // Redirect
-    header("Location: patient/dashboard.php");
+    header("Location: patient-dashboard.php");
     exit;
 } else if (isset($_COOKIE['rowanCaredoctor'])) {
     // Redirect
-    header("Location: doctor/dashboard.php");
+    header("Location: doctor-dashboard.php");
     exit;
 }
 
@@ -59,10 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $errorMessage = "User already exists.";
             }
         }
-
     } else {
         $errorMessage = "X Please fill all the fields X";
-
     }
 }
 
@@ -78,14 +76,14 @@ require_once "components/navbar.php";
     <?php
     $pageTitle = "RowanCare | Register";
     require_once "components/header.php"
-        ?>
+    ?>
 </head>
 
 <body>
     <!-- navbar -->
     <?php
     stickyNavbar()
-        ?>
+    ?>
 
     <div class="h-screen flex items-center w-[92%] md:w-[85%] mx-auto mt-5">
         <div class="hidden md:block">
@@ -94,16 +92,16 @@ require_once "components/navbar.php";
         <div class="bg-white w-full md:w-1/2 px-7 pt-5 pb-7 border-2 rounded-md">
             <?php
             if (!empty($errorMessage)) {
-                ?>
+            ?>
 
                 <p class="bg-red-500/20 p-2 rounded-md text-center text-red-500 font-semibold">
                     <?php echo $errorMessage; ?>
                 </p>
             <?php } else if (!empty($successMessage)) {
-                ?>
-                    <p class="bg-green-500/20 p-2 rounded-md text-center text-green-500 font-semibold">
+            ?>
+                <p class="bg-green-500/20 p-2 rounded-md text-center text-green-500 font-semibold">
                     <?php echo $successMessage; ?>
-                    </p>
+                </p>
             <?php } ?>
 
 
@@ -111,8 +109,7 @@ require_once "components/navbar.php";
                 <p class="font-semibold text-xl">
                     <?php echo ucfirst($register); ?> Register
                 </p>
-                <a href="?register=<?php echo ($register == 'patient') ? 'doctor' : 'patient'; ?>"
-                    class="font-semibold text-[#0D57E3] cursor-pointer">
+                <a href="?register=<?php echo ($register == 'patient') ? 'doctor' : 'patient'; ?>" class="font-semibold text-[#0D57E3] cursor-pointer">
                     Are you a
                     <?php echo ($register == 'patient') ? 'Doctor' : 'Patient'; ?>?
                 </a>
@@ -120,25 +117,17 @@ require_once "components/navbar.php";
 
             <form method="POST" action="register.php" class="flex flex-col gap-3 mt-5">
                 <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 w-full">
-                    <input class="<?php echo $inputStyle ?>" type="text"
-                        placeholder="<?php echo ($register == 'patient') ? 'Patient' : 'Doctor'; ?> First Name*"
-                        name="firstName" value="<?php echo $firstName; ?>">
-                    <input class="<?php echo $inputStyle ?>" type="text"
-                        placeholder="<?php echo ($register == 'patient') ? 'Patient' : 'Doctor'; ?> Last Name*"
-                        name="lastName" value="<?php echo $lastName; ?>">
+                    <input class="<?php echo $inputStyle ?>" type="text" placeholder="<?php echo ($register == 'patient') ? 'Patient' : 'Doctor'; ?> First Name*" name="firstName" value="<?php echo $firstName; ?>">
+                    <input class="<?php echo $inputStyle ?>" type="text" placeholder="<?php echo ($register == 'patient') ? 'Patient' : 'Doctor'; ?> Last Name*" name="lastName" value="<?php echo $lastName; ?>">
                 </div>
-                <input class="<?php echo $inputStyle ?>" type="email" placeholder="Email*" name="email"
-                    value="<?php echo $email; ?>">
-                <input class="<?php echo $inputStyle ?>" type="number" placeholder="Mobile Number*" name="phoneNumber"
-                    value="<?php echo $phoneNumber; ?>">
+                <input class="<?php echo $inputStyle ?>" type="email" placeholder="Email*" name="email" value="<?php echo $email; ?>">
+                <input class="<?php echo $inputStyle ?>" type="number" placeholder="Mobile Number*" name="phoneNumber" value="<?php echo $phoneNumber; ?>">
                 <input class="<?php echo $inputStyle ?>" type="password" placeholder="Create Password*" name="password">
-                <input class="<?php echo $inputStyle ?>" type="password" placeholder="Confirm Password*"
-                    name="confirmPassword">
+                <input class="<?php echo $inputStyle ?>" type="password" placeholder="Confirm Password*" name="confirmPassword">
 
                 <a class="w-full flex justify-end font-semibold text-[#0D57E3]" href="login.php">Already have an
                     account?</a>
-                <button
-                    class="font-semibold mt-3 bg-[#0D57E3] hover:bg-[#0a43b0] duration-500 text-white p-3 rounded-md">Sign
+                <button class="font-semibold mt-3 bg-[#0D57E3] hover:bg-[#0a43b0] duration-500 text-white p-3 rounded-md">Sign
                     Up</button>
             </form>
         </div>
