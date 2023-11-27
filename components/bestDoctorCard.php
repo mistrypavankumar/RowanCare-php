@@ -1,8 +1,8 @@
 <?php
-function bestDoctorCard(string $image, string $doctorName, string $specialization, string $rating, string $place)
+function bestDoctorCard(int $doctorId, string $image, string $doctorName, string $specialization, string $rating, string $place)
 {
-    ?>
-    <div class="overflow-hidden group cursor-pointer showdow-lg">
+?>
+    <a href="view-doctor-details.php?doctorId=<?php echo $doctorId ?>" class="overflow-hidden group cursor-pointer showdow-lg">
         <div class="w-full h-[250px] overflow-hidden rounded-t-15 bg-white rounded-tl-lg rounded-tr-lg">
             <img class="w-full group-hover:scale-110 duration-300" src="<?php echo $image ?>" alt="">
         </div>
@@ -24,8 +24,8 @@ function bestDoctorCard(string $image, string $doctorName, string $specializatio
             </p>
 
         </div>
-    </div>
+    </a>
 
-    <?php
+<?php
 }
 ?>
