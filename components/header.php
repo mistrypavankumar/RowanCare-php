@@ -25,6 +25,13 @@
 <!-- Javascript -->
 <script src="js/navbar.js?v=1"></script>
 
+<!-- Jquery script -->
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+<!-- External Jquery script -->
+<script src="js/jquery.js?v=1"></script>
+
+
 <style>
     body {
         font-family: 'Poppins', sans-serif;

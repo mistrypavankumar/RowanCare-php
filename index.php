@@ -93,6 +93,7 @@ require "constants/data.php";
 
                     foreach ($bestDoctors as $bestDoctor) {
                         bestDoctorCard(
+                            doctorId: 1,
                             image: $bestDoctor['image'],
                             doctorName: $bestDoctor['doctorName'],
                             specialization: $bestDoctor['specialization'],
@@ -104,9 +105,10 @@ require "constants/data.php";
                     foreach ($allBestSixDoctors as $bestDoctor) {
                         if (!empty($bestDoctor['image_path']) && !empty($bestDoctor['state'])) {
                             bestDoctorCard(
+                                doctorId: $bestDoctor['doctorId'],
                                 image: $bestDoctor['image_path'],
                                 doctorName: "Dr. " . $bestDoctor['firstName'] . " " . $bestDoctor["lastName"],
-                                specialization: "",
+                                specialization: $bestDoctor['specialization'],
                                 rating: "4.5",
                                 place: $bestDoctor['state']
                             );

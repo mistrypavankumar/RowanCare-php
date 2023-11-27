@@ -36,8 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!isset($_COOKIE['rowanCarepatient'])) {
             $_SESSION['error_message'] = "Sorry! </br>Please login as patient to book appointment";
         } else {
-            // Redirect
-            header("Location: appointment-payment.php?doctorId=" . urlencode($_GET['doctorId']) . "&appointmentDate=" . urlencode($appointmentDate) . "&appointmentTime=" . urlencode($appointmentTime));
+            $_SESSION['appointmentDate'] = $appointmentDate;
+            $_SESSION['appointmentTime'] = $appointmentTime;
+            $_SESSION['doctorId'] = $_GET['doctorId'];
+
+            header("Location: appointment-checkout.php");
             exit();
         }
     }
