@@ -109,7 +109,7 @@ function textInputForm($uniqueIdName, $label, $value)
                                 </div>
                             <?php endif; ?>
                             <div class="flex flex-col gap-1">
-                                <h1 class="text-[17px] font-medium"><?php echo $doctorName; ?></h1>
+                                <h1 class="text-[17px] font-medium">Dr. <?php echo $doctorName; ?></h1>
                                 <p class="text-xs text-gray-500">Rating <span class="text-black">(35)</span></p>
                                 <div class="text-[12px] flex items-center gap-2 text-gray-500">
                                     <i class="fa fa-map-marker text-gray-500"></i>

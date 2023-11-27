@@ -110,7 +110,7 @@ function timeButton($time, $day)
                         </div>
                     <?php endif; ?>
                     <div class="flex flex-col gap-1">
-                        <h1 class="text-xl font-medium"><?php echo $doctorName; ?></h1>
+                        <h1 class="text-xl font-medium">Dr. <?php echo $doctorName; ?></h1>
                         <p class="text-gray-500">Rating <span class="text-black">(35)</span></p>
                         <div class="flex items-center gap-2 text-gray-500">
                             <i class="fa fa-map-marker text-gray-500"></i>
