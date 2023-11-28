@@ -14,6 +14,8 @@ global $doctorData;
 if (isset($_COOKIE['rowanCaredoctor'])) {
     $userIdentifier = $_COOKIE['rowanCaredoctor'];
     $userData = getUserData($conn, $userIdentifier, $result["userType"]);
+    $profileImage = getProfileImage($conn, $userData['doctorId'], userType: "doctor");
+    $doctorAddress = getAddress($conn, $userData['doctorId'], 'doctor');
 } else {
     header("Location: page-not-found.php");
     exit();
@@ -30,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'gender' => $_POST['gender'],
         'zipcode' => $_POST['zipcode'],
         'specialization' => $_POST['specialization'],
-        'image_path' => $userData['image_path'] ?? "", // Set initially as empty
+        'imagePath' => $profileImage['imagePath'] ?? "", // Set initially as empty
     ];
 
     $feeRanges = [
@@ -58,18 +60,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['error_message'] = "Sorry, only JPG, JPEG, and PNG files are allowed.";
         } elseif (move_uploaded_file($_FILES["doctor-file-upload"]["tmp_name"], $target_file)) {
             // Delete old image if exists
-            if (!empty($userData['image_path']) && file_exists($userData['image_path'])) {
-                unlink($userData['image_path']);
+            if (!empty($profileImage['imagePath']) && file_exists($profileImage['imagePath'])) {
+                unlink($profileImage['imagePath']);
             }
-            $doctorData['image_path'] = $target_file;
+            $doctorData['imagePath'] = $target_file;
             $newFileUploaded = true;
         } else {
             $_SESSION['error_message'] = "Sorry, there was an error uploading your file.";
         }
     }
 
-    if (!$newFileUploaded && !empty($userData['image_path'])) {
-        $doctorData['image_path'] = $userData['image_path'];
+    if (!$newFileUploaded && !empty($profileImage['imagePath'])) {
+        $doctorData['imagePath'] = $profileImage['imagePath'];
     }
 
 
@@ -119,8 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     stickyNavbar();
     ?>
 
-
-
     <!-- Banner -->
     <?php
     require_once "components/banner.php";
@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="grid grid-cols-1 md:grid-cols-9 my-20 gap-4">
             <?php
             require_once "components/dashboard-navigation.php";
-            dashboardNavigation($userData, $doctorDashboardNav, $color, $result['userType']);
+            dashboardNavigation($userData, $doctorDashboardNav, $color, $result['userType'], profileImage: $profileImage['imagePath']);
             ?>
             <div class="col-span-9 md:col-span-7">
                 <form id="doctorProfileForm" method="POST" action="doctor-profile-settings.php" class="grid gap-4" enctype="multipart/form-data">
@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <?php
                         require_once 'components/uploadProfile.php';
-                        uploadProfile($userData, name: "doctor-file-upload");
+                        uploadProfile($userData, name: "doctor-file-upload", profileImage: $profileImage['imagePath']);
                         ?>
 
 
@@ -150,15 +150,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="col-span-1 space-y-3">
 
                                 <?php
-                                textInputField(userData: $userData, label: "First Name", textType: "text", value: "firstName", disabled: "disabled");
-                                textInputField(userData: $userData, label: "Date of Birth", textType: "date", value: "dateOfBirth");
-                                textInputField(userData: $userData, label: "Email ID", textType: "email", value: "email", disabled: "disabled");
+                                textInputField(data: $userData, label: "First Name", textType: "text", value: "firstName", disabled: "disabled");
+                                textInputField(data: $userData, label: "Date of Birth", textType: "date", value: "dateOfBirth");
+                                textInputField(data: $userData, label: "Email ID", textType: "email", value: "email", disabled: "disabled");
                                 ?>
 
                             </div>
                             <div class="col-span-1 space-y-3">
                                 <?php
-                                textInputField(userData: $userData, label: "Last Name", textType: "text", value: "lastName", disabled: "disabled");
+                                textInputField(data: $userData, label: "Last Name", textType: "text", value: "lastName", disabled: "disabled");
                                 ?>
 
                                 <div class="flex flex-col gap-2">
@@ -186,10 +186,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div class="mt-3 mb-3 grid grid-cols-1 md:grid-cols-2 gap-5">
                             <?php
-                            textInputField(userData: $userData, label: "Address Line1", textType: "text", value: "addressLine1");
+                            textInputField(data: $userData, label: "Address Line1", textType: "text", value: "addressLine1");
                             ?>
                             <?php
-                            textInputField(userData: $userData, label: "Address Line2", textType: "text", value: "addressLine2");
+                            textInputField(data: $userData, label: "Address Line2", textType: "text", value: "addressLine2");
                             ?>
 
 
@@ -197,7 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div class="col-span-1 space-y-3">
                                 <?php
-                                textInputField(userData: $userData, label: "City", textType: "text", value: "city");
+                                textInputField(data: $userData, label: "City", textType: "text", value: "city");
                                 ?>
                                 <div class="flex flex-col gap-2">
                                     <label for="zipCode">Zip Code</label>
@@ -206,8 +206,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="col-span-1 space-y-3">
                                 <?php
-                                textInputField(userData: $userData, label: "State", textType: "text", value: "state");
-                                textInputField(userData: $userData, label: "Country", textType: "text", value: "country");
+                                textInputField(data: $userData, label: "State", textType: "text", value: "state");
+                                textInputField(data: $userData, label: "Country", textType: "text", value: "country");
                                 ?>
                             </div>
                         </div>
@@ -232,17 +232,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div class="col-span-2 md:col-span-1">
                             <div class="flex flex-col gap-2">
-                                <label for="feerange" class="text-xl">Fee Range</label>
+                                <label for="consultingFee" class="text-xl">Consulting Fee</label>
 
                                 <div class="flex justify-between gap-4">
                                     <input value="<?php
                                                     $res = getFeeRange($conn, $userData['doctorId']);
                                                     echo $res['minFee'];
-                                                    ?>" class="outline-none text-gray-500 p-2.5 rounded-md border-2 w-full" min="100" max="200" type="number" name="minFee" id="minFee" placeholder="Minimum Fee (eg., 100)*" required>
-                                    <input value="<?php
-                                                    $res = getFeeRange($conn, $userData['doctorId']);
-                                                    echo $res['maxFee'];
-                                                    ?>" class="outline-none text-gray-500 p-2.5 rounded-md border-2 w-full" type="number" min="200" max="400" name="maxFee" id="maxFee" placeholder="Maximum Fee (eg., 500)">
+                                                    ?>" class="outline-none text-gray-500 p-2.5 rounded-md border-2 w-full" min="100" max="250" type="number" name="consultingFee" id="consultingFee" placeholder="Minimum Fee (eg., 100)*" required>
                                 </div>
                             </div>
                         </div>

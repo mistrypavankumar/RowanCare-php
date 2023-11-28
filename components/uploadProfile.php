@@ -1,10 +1,10 @@
-<?php function uploadProfile($userData, $name)
+<?php function uploadProfile($userData, $name, $profileImage)
 { ?>
 
     <div class="flex items-center gap-5 mb-5">
         <div class="w-24 h-24 bg-gray-200 overflow-hidden">
-            <?php if (!empty($userData['image_path'])) : ?>
-                <img class="w-full object-cover" src="<?php echo $userData['image_path']; ?>" alt="Profile Image">
+            <?php if (!empty($profileImage)) : ?>
+                <img class="w-full object-cover" src="<?php echo $profileImage; ?>" alt="Profile Image">
             <?php else : ?>
                 <div class="w-full h-full bg-gray-200 flex items-center justify-center">
                     <p class="text-xl font-bold text-gray-500">
@@ -27,16 +27,16 @@
                         </label>
                     </div>
 
-                    <?php if (!empty(basename($userData['image_path']))) : ?>
+                    <?php if (!empty(basename($profileImage ?? ""))) : ?>
                         <div>
                             <button type="button" id="removeProfileBtn" class="bg-red-500 text-white text-center py-2 px-4 rounded w-full">Remove profile</button>
                         </div>
 
                     <?php endif; ?>
                 </div>
-                <?php if (!empty($userData['image_path'])) : ?>
+                <?php if (!empty($profileImage)) : ?>
                     <span id="file-name" class="ml-2 text-sm text-gray-500 mt-2">Current:
-                        <?php echo basename($userData['image_path']); ?>
+                        <?php echo basename($profileImage); ?>
                     </span>
                 <?php else : ?>
                     <span id="file-name" class="ml-2 text-sm text-gray-500 mt-2"></span>

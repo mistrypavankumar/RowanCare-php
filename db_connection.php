@@ -154,14 +154,88 @@ function getBestSixDoctors($conn)
     }
 }
 
+function updateAddress($conn, $userId, $userType, $addressData)
+{
+    $sql = "SELECT * from $userType" . "_address" . " where $userType" . "Id" . " = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 1) {
+        if ($userType == "patient") {
+            $updatePatientData = "UPDATE patient_address SET city=?, state=?, country=?, address=?, zipcode =?, patientId = ?";
+            $stmt = $conn->prepare($updatePatientData);
+            $stmt->bind_param('sssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['address'], $addressData['zipcode'], $userId);
+
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            $updateDoctorData =  "UPDATE doctor_address SET city=?, state=?, country=?, addressLine1=?,addressLine2 =? ,zipcode =?, doctorId = ?";
+            $stmt = $conn->prepare($updateDoctorData);
+            $stmt->bind_param('ssssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['addressLine1'], $addressData['addressLine2'], $addressData['zipcode'], $userId);
+
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    } else {
+        if ($userType == "patient") {
+            $insertStatement = 'INSERT INTO patient_address ( city, state, country, address,zipcode, patientId) VALUES(?,?,?,?,?,?)';
+            $stmt = $conn->prepare($insertStatement);
+            $stmt->bind_param('sssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['address'], $addressData['zipcode'], $userId);
+
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            $insertStatement = 'INSERT INTO doctor_address ( city, state, country, addressLine1, addressLine2, zipcode, doctorId) VALUES(?,?,?,?,?,?)';
+            $stmt = $conn->prepare($insertStatement);
+            $stmt->bind_param('ssssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['addressLine1'], $addressData['addressLine2'], $addressData['zipcode'], $userId);
+
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+}
+
+
+function getAddress($conn, $userId, $userType)
+{
+    $sql = "SELECT * FROM $userType" . "_address" . " where $userType" . "Id" . " = ?";
+
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+
+        return $result;
+    }
+
+    return false;
+}
+
+
+
 function updatePatientProfile($conn, $userData, $patientData)
 {
-    $sql = "UPDATE patient SET dateOfBirth = ?, address = ?, bloodGroup = ?, city = ?, state = ?, country = ?, gender = ?, zipcode = ?, image_path = ? WHERE email = ?";
+    $sql = "UPDATE patient SET dateOfBirth = ?, bloodGroup = ?, gender = ? WHERE email = ?";
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("ssssssssss", $patientData['dateOfBirth'], $patientData['address'], $patientData['bloodGroup'], $patientData['city'], $patientData['state'], $patientData['country'], $patientData['gender'], $patientData['zipcode'], $patientData['image_path'], $userData['email']);
-        $result = $stmt->execute();
+        $stmt->bind_param("ssss", $patientData['dateOfBirth'], $patientData['bloodGroup'], $patientData['gender'], $userData['email']);
+        $stmt->execute();
         $stmt->close();
-        return $result;
+
+        return updateAddress($conn, $userData['patientId'], 'patient', $patientData);
     }
     return false;
 }
@@ -297,7 +371,7 @@ function getDoctorDetailsById($conn, $doctorId)
 
 function removeProfile($conn, $userType, $userId)
 {
-    $sql = "UPDATE " . $userType . " SET image_path = null where " . $userType . "Id = ?";
+    $sql = "UPDATE " . $userType . "_image_path SET imagePath = null where " . $userType . "Id = ?";
     $stmt = $conn->prepare($sql);
 
     if (!$stmt) {
@@ -312,4 +386,45 @@ function removeProfile($conn, $userType, $userId)
 
     $stmt->close();
     return true;
+}
+
+
+function addProfileImage($conn, $userId, $image_path, $userType)
+{
+    $checkQuery = "SELECT * from $userType" . "_image_path WHERE $userType" . "Id = ?";
+    $checkStmt = $conn->prepare($checkQuery);
+
+    if (!$checkStmt) {
+        return false;
+    }
+
+
+    $checkStmt->bind_param("s", $userId);
+    $checkStmt->execute();
+    $results = $checkStmt->get_result();
+
+    if ($results->num_rows > 0) {
+        $sql = "UPDATE $userType" . "_image_path" . " SET imagePath = ? where $userType" . "Id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("si", $image_path, $userId);
+        $result = $stmt->execute();
+        return $result;
+    } else {
+        $query = "INSERT INTO $userType" . "_image_path (imagePath, $userType" . "Id" . ")" . " VALUES(?,?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("si", $image_path, $userId);
+        $result = $stmt->execute();
+        return $result;
+    }
+}
+
+function getProfileImage($conn, $userId, $userType)
+{
+    $sql = "SELECT imagePath from $userType" . "_image_path" . " where $userType" . "Id" . " = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $userId);
+    $stmt->execute();
+    $results = $stmt->get_result()->fetch_assoc();
+
+    return $results;
 }
