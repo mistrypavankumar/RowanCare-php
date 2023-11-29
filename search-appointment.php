@@ -101,11 +101,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     </form>
                 </div>
                 <div class="grid col-span-9 md:col-span-7 gap-4">
-                    <?php foreach ($getAllDoctors as $doctor) : ?>
-                        <?php if (!empty($doctor["state"]) && !empty($doctor['country'])) : ?>
-                            <?php echo doctorCard(doctorData: $doctor, firstLetters: getFirstLetter($doctor['firstName']), color: $color, feeRange: getFeeRange($conn, $doctor['doctorId'])) ?>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
+                    <?php foreach ($getAllDoctors as $doctor) {
+                        $profileImage = getProfileImage($conn, $doctor['doctorId'], 'doctor');
+                        $doctorAddress = getAddress($conn, $doctor['doctorId'], 'doctor');
+                        $specializaiton = getDoctorSpecialization($conn, $doctor['doctorId']);
+
+                        if (!empty($doctorAddress["state"]) && !empty($doctorAddress['country'])) {
+                            doctorCard($doctor, $specializaiton, $profileImage, $doctorAddress, firstLetters: getFirstLetter($doctor['firstName']), color: $color, feeRange: "100");
+                        }
+                    }
+                    ?>
                 </div>
             </div>
         </div>

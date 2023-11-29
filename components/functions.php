@@ -14,15 +14,19 @@ function listOfFooterLinks($title, $links = [], $mainDivStyle, $titleStyle, $sty
 
 function textInputField($data, $label, $textType, $value, $disabled = null)
 {
+    // Check if $data is an array and $data[$value] is set
+    $inputValue = is_array($data) && isset($data[$value]) ? $data[$value] : '';
+
     echo '
     <div class="flex flex-col gap-2">
-        <label for="htmlFor">' . $label . '</label>
-        <input class="outline-none p-3 text-gray-500 rounded-md border-2" type="' . $textType . '"
-            name="' . $value . '" placeholder="Enter Your ' . $label . '" value="' . $data[$value] .
+        <label for="htmlFor">' . htmlspecialchars($label) . '</label>
+        <input class="outline-none p-3 text-gray-500 rounded-md border-2" type="' . htmlspecialchars($textType) . '"
+            name="' . htmlspecialchars($value) . '" placeholder="Enter Your ' . htmlspecialchars($label) . '" value="' . htmlspecialchars($inputValue) .
         '" ' . $disabled . ' required >
     </div>
     ';
 }
+
 
 
 function getFirstLetter($name)

@@ -196,7 +196,7 @@ function updateAddress($conn, $userId, $userType, $addressData)
                 return false;
             }
         } else {
-            $insertStatement = 'INSERT INTO doctor_address ( city, state, country, addressLine1, addressLine2, zipcode, doctorId) VALUES(?,?,?,?,?,?)';
+            $insertStatement = 'INSERT INTO doctor_address ( city, state, country, addressLine1, addressLine2, zipcode, doctorId) VALUES(?,?,?,?,?,?,?)';
             $stmt = $conn->prepare($insertStatement);
             $stmt->bind_param('ssssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['addressLine1'], $addressData['addressLine2'], $addressData['zipcode'], $userId);
 
@@ -205,6 +205,31 @@ function updateAddress($conn, $userId, $userType, $addressData)
             } else {
                 return false;
             }
+        }
+    }
+}
+
+
+function insertUpdateSpecialization($conn, $data, $doctorId)
+{
+    $checkQuery = "SELECT * FROM doctors_specialization where doctorId = ?";
+    $stmt = $conn->prepare($checkQuery);
+    $stmt->bind_param("i", $doctorId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 1) {
+
+        $update = "";
+    } else {
+        $insert = "INSERT INTO doctors_specialization(specialization, doctorId, consultingFee) VALUES(?,?,?)";
+        $stmt = $conn->prepare($insert);
+        $stmt->bind_param('sii', $data['specialization'], $doctorId, $data['consultingFee']);
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
@@ -222,7 +247,7 @@ function getAddress($conn, $userId, $userType)
         return $result;
     }
 
-    return false;
+    return [];
 }
 
 
@@ -242,13 +267,12 @@ function updatePatientProfile($conn, $userData, $patientData)
 
 function updateDoctorProfile($conn, $userData, $doctorData)
 {
-    $sql = "UPDATE doctor SET dateOfBirth = ?, addressLine1 = ?, addressLine2 = ?, city = ?, state = ?, country = ?, gender = ?, zipcode = ?, image_path = ?, specialization = ? WHERE email = ?";
+    $sql = "UPDATE doctor SET dateOfBirth = ?, gender = ? WHERE email = ?";
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("sssssssssss", $doctorData['dateOfBirth'], $doctorData['addressLine1'], $doctorData['addressLine2'], $doctorData['city'], $doctorData['state'], $doctorData['country'], $doctorData['gender'], $doctorData['zipcode'], $doctorData['image_path'], $doctorData['specialization'], $userData['email']);
-
-        $result = $stmt->execute();
+        $stmt->bind_param("sss", $doctorData['dateOfBirth'], $doctorData['gender'], $userData['email']);
+        $stmt->execute();
         $stmt->close();
-        return $result;
+        return updateAddress($conn, $userData['doctorId'], 'doctor', $doctorData);
     }
     return false;
 }
@@ -427,4 +451,36 @@ function getProfileImage($conn, $userId, $userType)
     $results = $stmt->get_result()->fetch_assoc();
 
     return $results;
+}
+
+function getDoctorSpecialization($conn, $doctorId)
+{
+    $sql = "SELECT * FROM doctors_specialization WHERE doctorId = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $doctorId);
+    $stmt->execute();
+    $results = $stmt->get_result()->fetch_assoc();
+    return $results;
+}
+
+function bookAppointment($conn, $data)
+{
+    $sql = "INSERT INTO appointment(patientId, doctorId, appointmentDate, bookingDate, amount, orderId) VALUES(?,?,?,?,?,?)";
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt === false) {
+        error_log('Error in preparing statement: ' . $conn->error);
+        return false;
+    }
+
+    $stmt->bind_param('iissds', $data['patientId'], $data['doctorId'], $data['appointmentDate'], $data['bookingDate'], $data['amount'], $data['orderId']);
+
+    if ($stmt->execute() === false) {
+        error_log('Error in executing statement: ' . $stmt->error);
+        return false;
+    }
+
+    $stmt->close();
+
+    return true;
 }
