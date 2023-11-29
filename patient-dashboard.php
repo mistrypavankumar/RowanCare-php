@@ -33,6 +33,7 @@ $result = getUserType();
         if (isset($_COOKIE['rowanCarepatient'])) {
             $userIdentifier = $_COOKIE['rowanCarepatient'];
             $userData = getUserData($conn, $userIdentifier, $result["userType"]);
+            $profileImage = getProfileImage($conn, $userData['patientId'], 'patient');
         }
 
     ?>
@@ -53,7 +54,7 @@ $result = getUserType();
                 <div class="grid grid-cols-1  md:grid-cols-9 my-20">
                     <?php
                     require_once "components/dashboard-navigation.php";
-                    dashboardNavigation($userData, $patientDashboardNav, $color, $result['userType']);
+                    dashboardNavigation($userData, $patientDashboardNav, $color, $result['userType'], $profileImage['imagePath'] ?? "");
                     ?>
                     <div class="col-span-7 bg-red-500 border-white border-2">
 

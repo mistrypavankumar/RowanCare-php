@@ -16,6 +16,7 @@ if (isset($_COOKIE['rowanCaredoctor'])) {
     $userData = getUserData($conn, $userIdentifier, $result["userType"]);
     $profileImage = getProfileImage($conn, $userData['doctorId'], userType: "doctor");
     $doctorAddress = getAddress($conn, $userData['doctorId'], 'doctor');
+    $doctorSpecialization = getDoctorSpecialization($conn, $userData['doctorId']);
 } else {
     header("Location: page-not-found.php");
     exit();
@@ -31,14 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'country' => $_POST['country'],
         'gender' => $_POST['gender'],
         'zipcode' => $_POST['zipcode'],
-        'specialization' => $_POST['specialization'],
         'imagePath' => $profileImage['imagePath'] ?? "", // Set initially as empty
     ];
 
-    $feeRanges = [
-        'min' => $_POST['minFee'],
-        'max' => $_POST['maxFee'],
+    $sp = [
+        'consultingFee' => $_POST['consultingFee'],
+        'specialization' => $_POST['specialization']
     ];
+
+
 
     $newFileUploaded = false;
     $target_dir = "uploads/doctors/";
@@ -77,6 +79,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     if ($_POST['action'] === 'removeProfile') {
+
+        if (!empty($profileImage['imagePath']) && file_exists($profileImage['imagePath'])) {
+            unlink($profileImage['imagePath']);
+        }
+
         $res = removeProfile($conn, userType: "doctor", userId: $userData['doctorId']);
 
         if ($res) {
@@ -86,10 +93,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else {
         if (empty($_SESSION['error_message'])) {
+            $image = addProfileImage(conn: $conn, userId: $userData['doctorId'], image_path: $doctorData['imagePath'], userType: "doctor");
             $res = updateDoctorProfile($conn, $userData, $doctorData);
-            $fee = insertOrUpdateFeeRange(conn: $conn, doctorId: $userData['doctorId'], minFee: $feeRanges['min'], maxFee: $feeRanges['max']);
+            $sp = insertUpdateSpecialization($conn, $sp, $userData['doctorId']);
 
-            if ($res) {
+            if ($res || $image || $sp) {
                 $_SESSION['success_message'] = "All profile details are successfully updated.";
             } else {
                 $_SESSION['error_message'] = $conn->error;
@@ -131,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="grid grid-cols-1 md:grid-cols-9 my-20 gap-4">
             <?php
             require_once "components/dashboard-navigation.php";
-            dashboardNavigation($userData, $doctorDashboardNav, $color, $result['userType'], profileImage: $profileImage['imagePath']);
+            dashboardNavigation($userData, $doctorDashboardNav, $color, $result['userType'], profileImage: $profileImage['imagePath'] ?? "");
             ?>
             <div class="col-span-9 md:col-span-7">
                 <form id="doctorProfileForm" method="POST" action="doctor-profile-settings.php" class="grid gap-4" enctype="multipart/form-data">
@@ -142,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <?php
                         require_once 'components/uploadProfile.php';
-                        uploadProfile($userData, name: "doctor-file-upload", profileImage: $profileImage['imagePath']);
+                        uploadProfile($userData, name: "doctor-file-upload", profileImage: $profileImage['imagePath'] ?? "");
                         ?>
 
 
@@ -186,10 +194,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div class="mt-3 mb-3 grid grid-cols-1 md:grid-cols-2 gap-5">
                             <?php
-                            textInputField(data: $userData, label: "Address Line1", textType: "text", value: "addressLine1");
+                            textInputField(data: $doctorAddress, label: "Address Line1", textType: "text", value: "addressLine1");
                             ?>
                             <?php
-                            textInputField(data: $userData, label: "Address Line2", textType: "text", value: "addressLine2");
+                            textInputField(data: $doctorAddress, label: "Address Line2", textType: "text", value: "addressLine2");
                             ?>
 
 
@@ -197,17 +205,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div class="col-span-1 space-y-3">
                                 <?php
-                                textInputField(data: $userData, label: "City", textType: "text", value: "city");
+                                textInputField(data: $doctorAddress, label: "City", textType: "text", value: "city");
                                 ?>
                                 <div class="flex flex-col gap-2">
                                     <label for="zipCode">Zip Code</label>
-                                    <input class="outline-none text-gray-500 p-3 rounded-md border-2" type="text" name="zipcode" id="zipCode" pattern="\d{6}" title="Please enter a 6-digit zip code" placeholder="Enter your area zip code" maxlength="6" minlength="6" value="<?php echo $userData['zipcode'] ?>">
+                                    <input class="outline-none text-gray-500 p-3 rounded-md border-2" type="text" name="zipcode" id="zipCode" pattern="\d{6}" title="Please enter a 6-digit zip code" placeholder="Enter your area zip code" maxlength="6" minlength="6" value="<?php echo $doctorAddress['zipcode'] ?? "" ?>">
                                 </div>
                             </div>
                             <div class="col-span-1 space-y-3">
                                 <?php
-                                textInputField(data: $userData, label: "State", textType: "text", value: "state");
-                                textInputField(data: $userData, label: "Country", textType: "text", value: "country");
+                                textInputField(data: $doctorAddress, label: "State", textType: "text", value: "state");
+                                textInputField(data: $doctorAddress, label: "Country", textType: "text", value: "country");
                                 ?>
                             </div>
                         </div>
@@ -223,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <select class="outline-none p-3 rounded-md border-2 text-gray-500" name="specialization" id="specialization">
                                     <option value="">Select your specialization</option>
                                     <?php foreach ($allSpecialization as $spec) : ?>
-                                        <option value="<?php echo htmlspecialchars($spec['name']); ?>" <?php echo $userData['specialization'] == $spec["name"] ? "selected" : ""; ?>>
+                                        <option value="<?php echo htmlspecialchars($spec['name']); ?>" <?php echo $doctorSpecialization['specialization'] == $spec['name'] ? "selected" : "" ?>>
                                             <?php echo htmlspecialchars($spec['name']); ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -235,10 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label for="consultingFee" class="text-xl">Consulting Fee</label>
 
                                 <div class="flex justify-between gap-4">
-                                    <input value="<?php
-                                                    $res = getFeeRange($conn, $userData['doctorId']);
-                                                    echo $res['minFee'];
-                                                    ?>" class="outline-none text-gray-500 p-2.5 rounded-md border-2 w-full" min="100" max="250" type="number" name="consultingFee" id="consultingFee" placeholder="Minimum Fee (eg., 100)*" required>
+                                    <input value="<?php echo $doctorSpecialization['consultingFee'] ?? "" ?>" class="outline-none text-gray-500 p-2.5 rounded-md border-2 w-full" min="100" max="250" type="number" name="consultingFee" id="consultingFee" placeholder="Enter your consulting fee between $100-250" required>
                                 </div>
                             </div>
                         </div>

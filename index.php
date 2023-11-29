@@ -103,14 +103,17 @@ require "constants/data.php";
                     }
 
                     foreach ($allBestSixDoctors as $bestDoctor) {
-                        if (!empty($bestDoctor['image_path']) && !empty($bestDoctor['state'])) {
+                        $profileImage = getProfileImage($conn, $bestDoctor['doctorId'], 'doctor');
+                        $doctorAddress = getAddress($conn, $bestDoctor['doctorId'], 'doctor');
+
+                        if (!empty($profileImage['imagePath']) && !empty($doctorAddress['state'])) {
                             bestDoctorCard(
                                 doctorId: $bestDoctor['doctorId'],
-                                image: $bestDoctor['image_path'],
+                                image: $profileImage['imagePath'],
                                 doctorName: "Dr. " . $bestDoctor['firstName'] . " " . $bestDoctor["lastName"],
-                                specialization: $bestDoctor['specialization'],
+                                specialization: "",
                                 rating: "4.5",
-                                place: $bestDoctor['state']
+                                place: $doctorAddress['state']
                             );
                         }
                     }

@@ -1,14 +1,14 @@
 <?php
 
-function doctorCard($doctorData, $firstLetters, $color, $feeRange)
+function doctorCard($doctorData, $specialization, $profileImage, $doctorAddress, $firstLetters, $color, $feeRange)
 {
 ?>
     <div class="h-auto col-span-9 md:col-span-7 border-2 rounded-lg p-6">
         <div class="flex flex-col md:flex-row justify-between">
             <div class="flex flex-col items-center md:items-start text-center md:text-start md:flex-row gap-5">
-                <?php if (!empty($doctorData['image_path'])) : ?>
+                <?php if (!empty($profileImage['imagePath'] ?? "")) : ?>
                     <div class="w-[150px] h-[150px] overflow-hidden rounded-lg">
-                        <img class="w-full object-cover" src="<?php echo $doctorData['image_path'] ?>" alt="doctor" srcset="">
+                        <img class="w-full object-cover" src="<?php echo $profileImage['imagePath'] ?>" alt="doctor" srcset="">
                     </div>
                 <?php else : ?>
                     <div class="w-[150px] h-[150px] overflow-hidden rounded-lg bg-gray-200 flex items-center justify-center">
@@ -20,14 +20,14 @@ function doctorCard($doctorData, $firstLetters, $color, $feeRange)
                     <p class="text-gray-500">desljsljf lakjfl ajsldfj alfdjl</p>
                     <div class="w-4 h-4 flex items-center gap-2 mt-4 -ml-20 md:-ml-0">
                         <img class="w-full object-cover" src="assets/icons/dark/specialities-01.svg" alt="icon">
-                        <p class="text-[<?php echo $color["primary"] ?>] font-medium"><?php echo $doctorData['specialization'] ?></p>
+                        <p class="text-[<?php echo $color["primary"] ?>] font-medium"><?php echo $specialization['specialization'] ?></p>
                     </div>
                     <p class="text-gray-500 mt-2">
                         Rating <span class="text-black font-medium">(35)</span>
                     </p>
                     <p class="text-gray-500 mt-1">
                         <i class="fa fa-map-marker" aria-hidden="true"></i>
-                        <span><?php echo $doctorData['state'] ?>, <?php echo $doctorData['country'] ?></span>
+                        <span><?php echo $doctorAddress['state'] ?>, <?php echo $doctorAddress['country'] ?></span>
                     </p>
                 </div>
             </div>
@@ -42,16 +42,12 @@ function doctorCard($doctorData, $firstLetters, $color, $feeRange)
                 </div>
                 <div class="flex gap-2 items-center">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    <span><?php echo $doctorData['state'] ?>, <?php echo $doctorData['country'] ?></span>
+                    <span><?php echo $doctorAddress['state'] ?>, <?php echo $doctorAddress['country'] ?></span>
                 </div>
                 <div class="flex gap-2 items-center">
                     <i class="fa fa-money" aria-hidden="true"></i>
-                    <span><?php if ($feeRange) {
-                                echo "$" . $feeRange['minFee'];
-
-                                if (!empty($feeRange['maxFee'])) {
-                                    echo " - " . $feeRange['maxFee'];
-                                }
+                    <span><?php if ($specialization['consultingFee']) {
+                                echo "$" . $specialization['consultingFee'];
                             } else {
                                 echo "Not provided";
                             } ?></span>

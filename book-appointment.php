@@ -8,10 +8,13 @@ session_start();
 
 $doctorId = $_GET['doctorId'];
 $doctorData = getDoctorDetailsById($conn, $doctorId);
+$profileImage = getProfileImage($conn, $doctorId, 'doctor');
+$doctorAddress = getAddress($conn, $doctorId, 'doctor');
+$specializaiton = getDoctorSpecialization($conn, $doctorId);
 
 $doctorName = $doctorData['firstName'] . " " . $doctorData['lastName'];
-$location = $doctorData['state'] . ", " . $doctorData['country'];
-$doctorImage = $doctorData['image_path'];
+$location = $doctorAddress['state'] . ", " . $doctorAddress['country'];
+$doctorImage = $profileImage['imagePath'];
 
 $firstLetters = getFirstLetter($doctorData['firstName']);
 

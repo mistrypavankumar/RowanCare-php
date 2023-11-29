@@ -18,20 +18,51 @@ if ($appointmentDate == null || $appointmentTime == null || $doctorId == null) {
         $userIdentifier = $_COOKIE['rowanCarepatient'];
         $patientData = getUserData($conn, $userIdentifier, "patient");
         $doctorData = getDoctorDetailsById($conn, $doctorId);
+        $profileImage = getProfileImage($conn, $doctorId, 'doctor');
+        $doctorAddress = getAddress($conn, $doctorId, 'doctor');
+        $specializaiton = getDoctorSpecialization($conn, $doctorId);
 
 
         $doctorName = $doctorData['firstName'] . " " . $doctorData['lastName'];
-        $location = $doctorData['state'] . ", " . $doctorData['country'];
-        $doctorImage = $doctorData['image_path'];
+        $location = $doctorAddress['state'] . ", " . $doctorAddress['country'];
+        $doctorImage = $profileImage['imagePath'];
         $firstLetters = getFirstLetter($doctorData['firstName']);
 
 
-        $consultingFee = 100;
+        $consultingFee = $specializaiton['consultingFee'];
         $bookingFee = 10;
         $vedioCallingFee = 50;
         $totalAmount = $consultingFee + $bookingFee + $vedioCallingFee;
     }
 }
+
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    $appointmentData = [
+        'appointmentDate' => $appointmentDate,
+        'appointmentTime' => $appointmentTime,
+        'bookingDate' => date('Y-m-d H:i:s'),
+        'doctorId' => $doctorId,
+        'patientId' => $patientData['patientId'],
+        'orderId' => $_POST['orderId'],
+        'amount' => $totalAmount
+    ];
+
+    if (!empty($appointmentData)) {
+        $res = bookAppointment($conn, $appointmentData);
+
+        if (!$res) {
+            header("Location: appointment-failed.php");
+            exit();
+        }
+
+        header("Location: appointment-success.php");
+        exit();
+    }
+}
+
+
+
 
 
 
@@ -42,7 +73,7 @@ function textInputForm($uniqueIdName, $label, $value)
     echo '
     <div class="flex flex-col gap-2">
     <label for="' . $uniqueIdName . '" class="font-semibold">' . $label . '</label>
-    <input type="text" value="' . $value . '" class="outline-none p-3 rounded-md border-2 text-gray-500" name="' . $uniqueIdName . '" id="' . $uniqueIdName . '" disabled>
+    <input type="text" value ="' . $value . '" class="outline-none p-3 rounded-md border-2 text-gray-500" name="' . $uniqueIdName . '" id="' . $uniqueIdName . '">
     </div>
     ';
 }
@@ -78,16 +109,20 @@ function textInputForm($uniqueIdName, $label, $value)
             <div class="grid grid-cols-1 md:grid-cols-9 gap-6">
                 <div class="col-span-9 md:col-span-5 border-2 h-auto rounded-lg p-6">
                     <h2 class="text-2xl font-semibold">Appointment Checkout</h2>
-                    <form method="POST" class="pt-7 flex flex-col gap-5">
+                    <form method="POST" action="appointment-checkout.php" class="pt-7 flex flex-col gap-5">
 
+                        <div class="flex flex-col gap-2">
+                            <label for="orderIdDisplay" class="font-semibold">Order ID</label>
+                            <input type="text" class="outline-none p-3 rounded-md border-2 text-gray-500" name="orderIdDisplay" id="orderIdDisplay" disabled>
+                            <input type="hidden" name="orderId" id="orderId">
+                        </div>
                         <?php
-                        textInputForm(uniqueIdName: "orderId", label: "Order Id", value: "");
                         textInputForm(uniqueIdName: "patientEmail", label: "Patient Email", value: $patientData['email']);
                         textInputForm(uniqueIdName: "amount", label: "Amount", value: $totalAmount);
                         ?>
 
                         <div class="flex flex-col sm:flex-row items-center justify-between w-full gap-5">
-                            <button class="text-center bg-[#0D57E3] hover:bg-[#0a43b0] duration-500 text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center w-full sm:w-fit justify-center font-medium">Check out</button>
+                            <button id="checkout" name="checkout" class="text-center bg-[#0D57E3] hover:bg-[#0a43b0] duration-500 text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center w-full sm:w-fit justify-center font-medium">Check out</button>
 
                             <a href="search-appointment.php" class="text-center bg-gray-500 hover:bg-gray-600 duration-500 text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center  w-full sm:w-fit justify-center font-medium">Cancel</a>
                         </div>
