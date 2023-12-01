@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "7143@Pavan";
-$dbname = "mistry64";
+$dbname = "hospitaldb";
 
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -212,7 +212,7 @@ function updateAddress($conn, $userId, $userType, $addressData)
 
 function insertUpdateSpecialization($conn, $data, $doctorId)
 {
-    $checkQuery = "SELECT * FROM doctors_specialization where doctorId = ?";
+    $checkQuery = "SELECT * FROM doctor_specialization where doctorId = ?";
     $stmt = $conn->prepare($checkQuery);
     $stmt->bind_param("i", $doctorId);
     $stmt->execute();
@@ -222,7 +222,7 @@ function insertUpdateSpecialization($conn, $data, $doctorId)
 
         $update = "";
     } else {
-        $insert = "INSERT INTO doctors_specialization(specialization, doctorId, consultingFee) VALUES(?,?,?)";
+        $insert = "INSERT INTO doctor_specialization(specialization, doctorId, consultingFee) VALUES(?,?,?)";
         $stmt = $conn->prepare($insert);
         $stmt->bind_param('sii', $data['specialization'], $doctorId, $data['consultingFee']);
 
@@ -277,43 +277,43 @@ function updateDoctorProfile($conn, $userData, $doctorData)
     return false;
 }
 
-function insertOrUpdateFeeRange($conn, $doctorId, $minFee, $maxFee)
-{
-    $select = "SELECT * FROM feerange WHERE doctorId = ?";
-    $stmt = $conn->prepare($select);
-    if (!$stmt) {
-        return false;
-    }
+// function insertOrUpdateFeeRange($conn, $doctorId, $minFee, $maxFee)
+// {
+//     $select = "SELECT * FROM feerange WHERE doctorId = ?";
+//     $stmt = $conn->prepare($select);
+//     if (!$stmt) {
+//         return false;
+//     }
 
-    $stmt->bind_param("i", $doctorId);
-    $stmt->execute();
-    $result = $stmt->get_result();
+//     $stmt->bind_param("i", $doctorId);
+//     $stmt->execute();
+//     $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
-        $update = "UPDATE feerange SET minFee = ?, maxFee = ? WHERE doctorId = ?";
-        $stmt = $conn->prepare($update);
-        if (!$stmt) {
-            return false;
-        }
+//     if ($result->num_rows > 0) {
+//         $update = "UPDATE feerange SET minFee = ?, maxFee = ? WHERE doctorId = ?";
+//         $stmt = $conn->prepare($update);
+//         if (!$stmt) {
+//             return false;
+//         }
 
-        $stmt->bind_param("iii", $minFee, $maxFee, $doctorId);
-    } else {
-        $insert = "INSERT INTO feerange (doctorId, minFee, maxFee) VALUES (?, ?, ?)";
-        $stmt = $conn->prepare($insert);
-        if (!$stmt) {
-            return false;
-        }
+//         $stmt->bind_param("iii", $minFee, $maxFee, $doctorId);
+//     } else {
+//         $insert = "INSERT INTO feerange (doctorId, minFee, maxFee) VALUES (?, ?, ?)";
+//         $stmt = $conn->prepare($insert);
+//         if (!$stmt) {
+//             return false;
+//         }
 
-        $stmt->bind_param("iii", $doctorId, $minFee, $maxFee);
-    }
+//         $stmt->bind_param("iii", $doctorId, $minFee, $maxFee);
+//     }
 
-    if (!$stmt->execute()) {
-        return false;
-    }
+//     if (!$stmt->execute()) {
+//         return false;
+//     }
 
-    $stmt->close();
-    return true;
-}
+//     $stmt->close();
+//     return true;
+// }
 
 
 function getFeeRange($conn, $doctorId)
@@ -395,7 +395,7 @@ function getDoctorDetailsById($conn, $doctorId)
 
 function removeProfile($conn, $userType, $userId)
 {
-    $sql = "UPDATE " . $userType . "_image_path SET imagePath = null where " . $userType . "Id = ?";
+    $sql = "Delete FROM " . $userType . "_image_path WHERE " . $userType . "Id = ?";
     $stmt = $conn->prepare($sql);
 
     if (!$stmt) {
@@ -455,12 +455,12 @@ function getProfileImage($conn, $userId, $userType)
 
 function getDoctorSpecialization($conn, $doctorId)
 {
-    $sql = "SELECT * FROM doctors_specialization WHERE doctorId = ?";
+    $sql = "SELECT * FROM doctor_specialization WHERE doctorId = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $doctorId);
     $stmt->execute();
     $results = $stmt->get_result()->fetch_assoc();
-    return $results;
+    return $results ?? [];
 }
 
 function bookAppointment($conn, $data)

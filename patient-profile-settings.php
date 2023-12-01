@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         <div class="grid grid-cols-1 md:grid-cols-9 my-20 gap-4">
             <?php
             require_once "components/dashboard-navigation.php";
-            dashboardNavigation($userData, $patientDashboardNav, $color, $result['userType'], profileImage: $profileImage['imagePath']);
+            dashboardNavigation($conn, $userData, $patientDashboardNav, $color, $result['userType'], profileImage: $profileImage['imagePath'] ?? "");
             ?>
 
             <div class="col-span-9 md:col-span-7 border-2 rounded-lg px-5 py-5">
@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 <form id="patientProfileForm" method="POST" action="patient-profile-settings.php" enctype="multipart/form-data">
                     <?php
                     require_once 'components/uploadProfile.php';
-                    uploadProfile($userData, name: "patient-file-upload", profileImage: $profileImage['imagePath']);
+                    uploadProfile($userData, name: "patient-file-upload", profileImage: $profileImage['imagePath'] ?? "");
                     ?>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="col-span-1 space-y-3">
@@ -213,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                             ?>
                             <div class="flex flex-col gap-2">
                                 <label for="zipCode">Zip Code</label>
-                                <input class="outline-none text-gray-500 p-3 rounded-md border-2" type="text" name="zipcode" id="zipCode" pattern="\d{6}" title="Please enter a 6-digit zip code" placeholder="Enter your area zip code" maxlength="6" minlength="6" value="<?php echo $patientAddress['zipcode'] ?>">
+                                <input class="outline-none text-gray-500 p-3 rounded-md border-2" type="text" name="zipcode" id="zipCode" pattern="\d{6}" title="Please enter a 6-digit zip code" placeholder="Enter your area zip code" maxlength="6" minlength="6" value="<?php echo $patientAddress['zipcode'] ?? "" ?>">
                             </div>
                         </div>
                         <div class="col-span-1 space-y-3">

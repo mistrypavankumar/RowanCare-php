@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="grid grid-cols-1 md:grid-cols-9 my-20 gap-4">
             <?php
             require_once "components/dashboard-navigation.php";
-            dashboardNavigation($userData, $doctorDashboardNav, $color, $result['userType'], profileImage: $profileImage['imagePath'] ?? "");
+            dashboardNavigation($conn, $userData, $doctorDashboardNav, $color, $result['userType'], profileImage: $profileImage['imagePath'] ?? "");
             ?>
             <div class="col-span-9 md:col-span-7">
                 <form id="doctorProfileForm" method="POST" action="doctor-profile-settings.php" class="grid gap-4" enctype="multipart/form-data">
@@ -231,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <select class="outline-none p-3 rounded-md border-2 text-gray-500" name="specialization" id="specialization">
                                     <option value="">Select your specialization</option>
                                     <?php foreach ($allSpecialization as $spec) : ?>
-                                        <option value="<?php echo htmlspecialchars($spec['name']); ?>" <?php echo $doctorSpecialization['specialization'] == $spec['name'] ? "selected" : "" ?>>
+                                        <option value="<?php echo htmlspecialchars($spec['name']); ?>" <?php echo $doctorSpecialization['specialization'] ?? "" == $spec['name'] ? "selected" : "" ?>>
                                             <?php echo htmlspecialchars($spec['name']); ?>
                                         </option>
                                     <?php endforeach; ?>

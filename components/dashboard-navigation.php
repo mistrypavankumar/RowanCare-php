@@ -11,9 +11,11 @@ function dashboardNavLink($color, $label, $icon, $path, $page)
     ';
 }
 
-function dashboardNavigation($userData, $patientDashboardNav, $color, $userType, $profileImage)
+function dashboardNavigation($conn, $userData, $patientDashboardNav, $color, $userType, $profileImage)
 {
     $page = basename($_SERVER['REQUEST_URI']);
+
+    $address = getAddress($conn, $userData[$userType . "Id"], $userType);
 
 ?>
     <div class="h-fit col-span-9 md:col-span-2 bg-white border-2 rounded-lg">
@@ -50,7 +52,28 @@ function dashboardNavigation($userData, $patientDashboardNav, $color, $userType,
             <?php } ?>
 
 
-            <p class="text-xs text-gray-500">BDS, MDS - Oral & Maxillofacial Surgery</p>
+            <?php if ($userType === "patient") {
+                $res = explode("-", $userData['dateOfBirth']);
+                $dob = date('d M Y', strtotime(implode("-", array_reverse($res))));
+
+                $dateOfBirth = new DateTime($userData['dateOfBirth']);
+                $today = new DateTime('today');
+                $age = $dateOfBirth->diff($today)->y;  // y - get the year difference    
+            ?>
+                <div class="flex flex-col items-center justify-center gap-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-birthday-cake text-gray-500 text-xs" aria-hidden="true"></i>
+                        <p class="text-gray-500 text-xs font-medium"><?php echo $dob . ", " . $age . " years" ?></p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-map-marker text-gray-500 text-xs" aria-hidden="true"></i>
+                        <p class="text-gray-500 text-xs font-medium"><?php echo $address['state'] ?></p>
+                    </div>
+                </div>
+            <?php } else { ?>
+                <p class="text-xs text-gray-500">BDS, MDS - Oral & Maxillofacial Surgery</p>
+            <?php } ?>
+
         </div>
         <div class="flex flex-col">
             <?php
