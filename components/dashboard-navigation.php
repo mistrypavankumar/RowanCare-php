@@ -52,7 +52,7 @@ function dashboardNavigation($conn, $userData, $patientDashboardNav, $color, $us
             <?php } ?>
 
 
-            <?php if ($userType === "patient") {
+            <?php if ($userType === "patient"  && !empty($userData['dateOfBirth'] ?? "")) {
                 $res = explode("-", $userData['dateOfBirth']);
                 $dob = date('d M Y', strtotime(implode("-", array_reverse($res))));
 
