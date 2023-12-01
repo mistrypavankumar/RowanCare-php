@@ -92,6 +92,7 @@ CREATE TABLE `appointment` (
   `patientId` int NOT NULL,
   `doctorId` int NOT NULL,
   `appointmentDate` datetime NOT NULL,
+  `appointmentTime` datetime NOT NULL,
   `bookingDate` datetime NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `status` varchar(50) DEFAULT 'Pending',
@@ -129,3 +130,22 @@ VALUES
 ('Pediatrics'),
 ('Orthopedics'),
 ('Dentist');
+
+
+/* store procedures */
+DELIMITER $$
+
+CREATE PROCEDURE `getAppointmentsWithDoctorInfo`(IN patientID INT)
+BEGIN
+    SELECT a.appointmentId, a.patientId, a.appointmentDate, a.appointmentTime, 
+           a.bookingDate, a.amount, a.status, a.orderId, a.doctorId, 
+           d.firstName, d.lastName, ds.specializationId, ds.specialization,img.imagePath
+    FROM appointment a
+    JOIN doctor d ON d.doctorId = a.doctorId
+    JOIN doctor_specialization ds ON ds.doctorId = a.doctorId
+    JOIN doctor_image_path img ON img.doctorId = a.doctorId
+    WHERE a.patientId = patientId
+    ORDER BY a.bookingDate DESC;
+END $$
+
+DELIMITER ;

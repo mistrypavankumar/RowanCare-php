@@ -465,7 +465,7 @@ function getDoctorSpecialization($conn, $doctorId)
 
 function bookAppointment($conn, $data)
 {
-    $sql = "INSERT INTO appointment(patientId, doctorId, appointmentDate, bookingDate, amount, orderId) VALUES(?,?,?,?,?,?)";
+    $sql = "INSERT INTO appointment(patientId, doctorId, appointmentDate, appointmentTime, bookingDate, amount, orderId) VALUES(?,?,?,?,?,?,?)";
     $stmt = $conn->prepare($sql);
 
     if ($stmt === false) {
@@ -473,7 +473,7 @@ function bookAppointment($conn, $data)
         return false;
     }
 
-    $stmt->bind_param('iissds', $data['patientId'], $data['doctorId'], $data['appointmentDate'], $data['bookingDate'], $data['amount'], $data['orderId']);
+    $stmt->bind_param('iisssds', $data['patientId'], $data['doctorId'], $data['appointmentDate'], $data['appointmentTime'], $data['bookingDate'], $data['amount'], $data['orderId']);
 
     if ($stmt->execute() === false) {
         error_log('Error in executing statement: ' . $stmt->error);
@@ -483,4 +483,25 @@ function bookAppointment($conn, $data)
     $stmt->close();
 
     return true;
+}
+
+function getPatientAllAppointments($conn, $patientId)
+{
+    $sql = "CALL getAppointmentsWithDoctorInfo($patientId)";
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt === false) {
+        return array();
+    }
+
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $allAppointments = $result->fetch_all(MYSQLI_ASSOC);
+        return $allAppointments;
+    } else {
+        return array();
+    }
 }
