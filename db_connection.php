@@ -465,7 +465,19 @@ function getDoctorSpecialization($conn, $doctorId)
 
 function bookAppointment($conn, $data)
 {
-    $sql = "INSERT INTO appointment(patientId, doctorId, appointmentDate, appointmentTime, bookingDate, amount, orderId) VALUES(?,?,?,?,?,?,?)";
+
+    $patientType = "New Patient";
+
+    $isOldPatient = $conn->prepare('SELECT * FROM appointment WHERE patientId = ?');
+    $isOldPatient->bind_param('i', $data["patientId"]);
+    $isOldPatient->execute();
+    $res = $isOldPatient->get_result();
+
+    if ($res->num_rows > 0) {
+        $patientType = "Old Patient";
+    }
+
+    $sql = "INSERT INTO appointment(patientId, doctorId, appointmentDate, appointmentTime, bookingDate, amount, orderId, patientType) VALUES(?,?,?,?,?,?,?,?)";
     $stmt = $conn->prepare($sql);
 
     if ($stmt === false) {
@@ -473,7 +485,7 @@ function bookAppointment($conn, $data)
         return false;
     }
 
-    $stmt->bind_param('iisssds', $data['patientId'], $data['doctorId'], $data['appointmentDate'], $data['appointmentTime'], $data['bookingDate'], $data['amount'], $data['orderId']);
+    $stmt->bind_param('iisssdss', $data['patientId'], $data['doctorId'], $data['appointmentDate'], $data['appointmentTime'], $data['bookingDate'], $data['amount'], $data['orderId'], $patientType);
 
     if ($stmt->execute() === false) {
         error_log('Error in executing statement: ' . $stmt->error);
@@ -504,4 +516,46 @@ function getPatientAllAppointments($conn, $patientId)
     } else {
         return array();
     }
+}
+
+
+function getProgressData($conn, $doctorId)
+{
+    $res = [];
+
+    // Function to handle SQL queries
+    function executeQuery($conn, $sql, $params = null)
+    {
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            return null;
+        }
+
+        if ($params) {
+            $stmt->bind_param(...$params);
+        }
+
+        if (!$stmt->execute()) {
+            return null;
+        }
+
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    $result = executeQuery($conn, "SELECT getTotalPatients() as totalPatients");
+    if ($result !== null) {
+        $res['totalPatients'] = $result['totalPatients'];
+    }
+
+    $result = executeQuery($conn, "SELECT getTotalPatients() as todaysPatients");
+    if ($result !== null) {
+        $res['todaysPatients'] = $result['todaysPatients'];
+    }
+
+    $result = executeQuery($conn, "SELECT COUNT(*) as totalAppointments FROM appointment WHERE doctorId = ? and DATE(bookingDate) = CURDATE()", ['i', $doctorId]);
+    if ($result !== null) {
+        $res['totalAppointments'] = $result['totalAppointments'];
+    }
+
+    return $res;
 }

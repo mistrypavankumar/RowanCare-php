@@ -2,13 +2,30 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <?php
+    $pageTitle = "RowanCare | Checkout";
+    require_once "components/header.php";
+    ?>
 </head>
 
 <body>
-    Success......
+    <!-- navbar -->
+    <?php
+    require_once "components/navbar.php";
+    stickyNavbar()
+    ?>
+
+    <main>
+        <!-- Banner -->
+        <?php
+        require_once "components/banner.php";
+        banner(title: "Booking", path: "Appointment Success");
+        ?>
+
+        <div>
+
+        </div>
+    </main>
 </body>
 
 </html>
