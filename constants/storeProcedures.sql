@@ -1,6 +1,5 @@
 /* store procedures */
 DELIMITER $$
-
 CREATE PROCEDURE `getAppointmentsWithDoctorInfo`(IN patientID INT)
 BEGIN
     SELECT a.appointmentId, a.patientId, a.appointmentDate, a.appointmentTime, 
@@ -13,5 +12,27 @@ BEGIN
     WHERE a.patientId = patientId
     ORDER BY a.bookingDate DESC;
 END $$
+DELIMITER ;
 
+
+DELIMITER $$
+CREATE PROCEDURE `getAppointmentsByDoctorId`(IN doctorId INT)
+BEGIN
+    SELECT 
+    (SELECT COUNT(*) FROM appointment WHERE doctorId = doctorId) as totalAppointment,
+    a.appointmentId, a.patientId, a.appointmentDate, a.appointmentTime, 
+    a.bookingDate, a.amount, a.status, a.orderId, a.doctorId, 
+    p.firstName, p.lastName, img.imagePath
+    FROM 
+        appointment a
+    LEFT JOIN 
+        patient p ON p.patientId = a.patientid
+    LEFT JOIN 
+        patient_image_path img ON img.patientId = a.patientId
+    WHERE 
+        a.doctorId = doctorId
+    ORDER BY 
+        a.bookingDate DESC;
+
+END $$
 DELIMITER ;

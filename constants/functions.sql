@@ -1,0 +1,25 @@
+
+DELIMITER //
+CREATE FUNCTION getTotalPatients()
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE total INT;
+    SELECT COUNT(*) INTO total FROM patient;
+    RETURN total;
+END //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE FUNCTION getTotalTodaysPatient()
+RETURNS INT
+READS SQL DATA
+BEGIN
+	DECLARE total INT;
+    SELECT COUNT(*) INTO total FROM registration
+    WHERE DATE(created_on) = CURDATE();
+    RETURN total;
+END //
+DELIMITER ;
+
