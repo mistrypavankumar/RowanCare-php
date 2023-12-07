@@ -107,7 +107,7 @@ $doctorDashboardNav = [
   ],
   [
     'label' => "Invoices",
-    'path' => "",
+    'path' => "doctor-invoices.php",
     'icon' => "fa-wpforms",
   ],
   [
