@@ -91,27 +91,17 @@ require "constants/data.php";
                     <?php
                     include "components/bestDoctorCard.php";
 
-                    foreach ($bestDoctors as $bestDoctor) {
-                        bestDoctorCard(
-                            doctorId: 1,
-                            image: $bestDoctor['image'],
-                            doctorName: $bestDoctor['doctorName'],
-                            specialization: $bestDoctor['specialization'],
-                            rating: $bestDoctor['rating'],
-                            place: $bestDoctor['place']
-                        );
-                    }
-
                     foreach ($allBestSixDoctors as $bestDoctor) {
                         $profileImage = getProfileImage($conn, $bestDoctor['doctorId'], 'doctor');
                         $doctorAddress = getAddress($conn, $bestDoctor['doctorId'], 'doctor');
+                        $sp = getDoctorSpecialization($conn, $bestDoctor['doctorId']);
 
-                        if (!empty($profileImage['imagePath']) && !empty($doctorAddress['state'])) {
+                        if (!empty($profileImage['imagePath']) && !empty($doctorAddress['state']) && !empty($sp['specialization'])) {
                             bestDoctorCard(
                                 doctorId: $bestDoctor['doctorId'],
                                 image: $profileImage['imagePath'],
                                 doctorName: "Dr. " . $bestDoctor['firstName'] . " " . $bestDoctor["lastName"],
-                                specialization: "",
+                                specialization: $sp['specialization'],
                                 rating: "4.5",
                                 place: $doctorAddress['state']
                             );

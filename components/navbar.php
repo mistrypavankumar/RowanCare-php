@@ -1,7 +1,7 @@
 <?php
 function stickyNavbar($isLoggedIn = false, $logoPath = "./assets/logo/Rowancare-logo.png")
 {
-    ?>
+?>
 
     <?php
     $page = basename($_SERVER['REQUEST_URI']);
@@ -32,18 +32,18 @@ function stickyNavbar($isLoggedIn = false, $logoPath = "./assets/logo/Rowancare-
                     " href="index.php">Home</a>
 
                 <a class="<?php
-                echo "text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
-                echo $page == "pharmacy.php" ? " text-[#0D57E3]" : "";
-                ?>" href="pharmacy.php">Pharmacy</a>
+                            echo "text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
+                            echo $page == "pharmacy.php" ? " text-[#0D57E3]" : "";
+                            ?>" href="pharmacy.php">Pharmacy</a>
 
                 <a class="<?php
-                echo "text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
-                echo $page == "aboutus.php" ? " text-[#0D57E3]" : "";
-                ?>" href="aboutus.php">About Us</a>
+                            echo "text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
+                            echo $page == "aboutus.php" ? " text-[#0D57E3]" : "";
+                            ?>" href="aboutus.php">About Us</a>
                 <a class="<?php
-                echo "text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
-                echo $page == "contactus.php" ? " text-[#0D57E3]" : "";
-                ?>" href="contactus.php">Contact Us</a>
+                            echo "text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
+                            echo $page == "contactus.php" ? " text-[#0D57E3]" : "";
+                            ?>" href="contactus.php">Contact Us</a>
 
             </div>
             <div class="hidden md:flex gap-5">
@@ -75,8 +75,7 @@ function stickyNavbar($isLoggedIn = false, $logoPath = "./assets/logo/Rowancare-
             </div>
 
             <!-- Mobile view navbar -->
-            <div id="mobileNavbar"
-                class="md:hidden border-r-2 bg-white absolute translate-x-[-100%] top-0 left-0 w-[75%] h-screen p-5 flex flex-col">
+            <div id="mobileNavbar" class="md:hidden border-r-2 bg-white absolute translate-x-[-100%] top-0 left-0 w-[75%] h-screen p-5 flex flex-col">
                 <a href="index.php" class="w-[180px] pt-4 pb-10  cursor-pointer">
                     <img class="w-full" src="./assets/logo/Rowancare-logo.png" alt="">
                 </a>
@@ -92,18 +91,18 @@ function stickyNavbar($isLoggedIn = false, $logoPath = "./assets/logo/Rowancare-
                         " href="index.php">Home</a>
 
                         <a class="<?php
-                        echo "hover:bg-[#0D57E3]/10 py-3 px-2 text-[17px] rounded-md text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
-                        echo $page == "pharmacy.php" ? " text-[#0D57E3]" : "";
-                        ?>" href="pharmacy.php">Pharmacy</a>
+                                    echo "hover:bg-[#0D57E3]/10 py-3 px-2 text-[17px] rounded-md text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
+                                    echo $page == "pharmacy.php" ? " text-[#0D57E3]" : "";
+                                    ?>" href="pharmacy.php">Pharmacy</a>
 
                         <a class="<?php
-                        echo "hover:bg-[#0D57E3]/10 py-3 px-2 text-[17px] rounded-md text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
-                        echo $page == "aboutus.php" ? " text-[#0D57E3]" : "";
-                        ?>" href="aboutus.php">About Us</a>
+                                    echo "hover:bg-[#0D57E3]/10 py-3 px-2 text-[17px] rounded-md text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
+                                    echo $page == "aboutus.php" ? " text-[#0D57E3]" : "";
+                                    ?>" href="aboutus.php">About Us</a>
                         <a class="<?php
-                        echo "hover:bg-[#0D57E3]/10 py-3 px-2 text-[17px] rounded-md text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
-                        echo $page == "contactus.php" ? " text-[#0D57E3]" : "";
-                        ?>" href="contactus.php">Contact Us</a>
+                                    echo "hover:bg-[#0D57E3]/10 py-3 px-2 text-[17px] rounded-md text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
+                                    echo $page == "contactus.php" ? " text-[#0D57E3]" : "";
+                                    ?>" href="contactus.php">Contact Us</a>
                     </div>
 
                     <?php
@@ -113,7 +112,6 @@ function stickyNavbar($isLoggedIn = false, $logoPath = "./assets/logo/Rowancare-
                             class="px-7 bg-[#0D57E3]/90 hover:bg-[#0D57E3] hover:scale-105 duration-300 text-white py-2 rounded-md text-center font-medium cursor-pointer">
                             Dashboard
                         </a>';
-
                     } else {
                         echo '
                             <div class="flex flex-col gap-5">
@@ -130,6 +128,6 @@ function stickyNavbar($isLoggedIn = false, $logoPath = "./assets/logo/Rowancare-
             </div>
         </div>
     </div>
-    <?php
+<?php
 }
 ?>

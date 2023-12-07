@@ -92,7 +92,7 @@ $doctorDashboardNav = [
   ],
   [
     'label' => "My Patients",
-    'path' => "",
+    'path' => "doctor-my-patients.php",
     'icon' => "fa-user-plus",
   ],
   [

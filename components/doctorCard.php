@@ -1,6 +1,6 @@
 <?php
 
-function doctorCard($doctorData, $specialization, $profileImage, $doctorAddress, $firstLetters, $color, $feeRange)
+function doctorCard($doctorData, $specialization, $profileImage, $doctorAddress, $firstLetters, $color)
 {
 ?>
     <div class="h-auto col-span-9 md:col-span-7 border-2 rounded-lg p-6">

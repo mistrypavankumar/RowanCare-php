@@ -9,9 +9,6 @@ require 'components/doctorCard.php';
 $specializaitons = getAllSpecializations($conn);
 $getAllDoctors = getAllDoctors($conn);
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $selectedGenders = $_POST['gender'] ?? "";
-}
 
 ?>
 
@@ -107,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         $specializaiton = getDoctorSpecialization($conn, $doctor['doctorId']);
 
                         if (!empty($doctorAddress["state"]) && !empty($doctorAddress['country'])) {
-                            doctorCard($doctor, $specializaiton, $profileImage, $doctorAddress, firstLetters: getFirstLetter($doctor['firstName']), color: $color, feeRange: "100");
+                            doctorCard($doctor, $specializaiton, $profileImage, $doctorAddress, firstLetters: getFirstLetter($doctor['firstName']), color: $color);
                         }
                     }
                     ?>

@@ -17,6 +17,12 @@ function dashboardNavigation($conn, $userData, $patientDashboardNav, $color, $us
 
     $address = getAddress($conn, $userData[$userType . "Id"], $userType);
 
+    // if doctor is logged in
+    if ($userType == "doctor") {
+        $sp = getDoctorSpecialization($conn, $userData['doctorId']);
+    }
+
+
 ?>
     <div class="h-fit col-span-9 md:col-span-2 bg-white border-2 rounded-lg">
         <div class="flex w-full items-center justify-center py-10 flex-col space-y-2">
@@ -52,7 +58,7 @@ function dashboardNavigation($conn, $userData, $patientDashboardNav, $color, $us
             <?php } ?>
 
 
-            <?php if ($userType === "patient"  && !empty($userData['dateOfBirth'] ?? "")) {
+            <?php if ($userType === "patient"  && !empty($userData['dateOfBirth'] ?? "" && !empty($address['state']))) {
                 $res = explode("-", $userData['dateOfBirth']);
                 $dob = date('d M Y', strtotime(implode("-", array_reverse($res))));
 
@@ -70,8 +76,11 @@ function dashboardNavigation($conn, $userData, $patientDashboardNav, $color, $us
                         <p class="text-gray-500 text-xs font-medium"><?php echo $address['state'] ?></p>
                     </div>
                 </div>
+            <?php } elseif ($userType === "doctor" && !empty($sp['specialization'])) {
+            ?>
+                <p class="text-xs text-gray-500"><?php echo $sp['specialization'] ?></p>
             <?php } else { ?>
-                <p class="text-xs text-gray-500">BDS, MDS - Oral & Maxillofacial Surgery</p>
+                <p class="bg-red-200 text-xs text-red-500 w-[80%] py-1 rounded-lg text-center">Please update your profile.</p>
             <?php } ?>
 
         </div>
