@@ -99,7 +99,7 @@ $result = getUserType();
                                             <td>$<?php echo $appt['amount'] ?></td>
                                             <td>
                                                 <p class="<?php
-                                                            if ($appt['status'] == "Confirm") {
+                                                            if ($appt['status'] == "Confirmed") {
                                                                 echo "bg-green-500/20 text-green-500 ";
                                                             } elseif ($appt['status'] == "Cancelled") {
                                                                 echo "bg-red-500/20 text-red-500 ";

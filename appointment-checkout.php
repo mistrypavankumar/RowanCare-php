@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             exit();
         }
 
-        header("Location: appointment-success.php");
+        header("Location: appointment-success.php?orderId=" . $appointmentData['orderId']);
         exit();
     }
 }

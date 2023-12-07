@@ -6,7 +6,7 @@
     <?php echo isset($pageTitle) ? $pageTitle : "RowanCare"; ?>
 </title>
 
-<link rel="shortcut icon" href="assets/weblogo.png" type="image/x-icon">
+<link rel="shortcut icon" href="<?php echo isset($tabIcon) ? $tabIcon : "assets/weblogo.png" ?>" type="image/x-icon">
 
 <!-- global css -->
 <link rel="stylesheet" href="styles/global.css" type="text/css">

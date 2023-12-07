@@ -559,3 +559,32 @@ function getProgressData($conn, $doctorId)
 
     return $res;
 }
+
+
+function getAppointmentByOrderId($conn, $orderId)
+{
+    $sql = 'SELECT * FROM appointment WHERE orderId = "' . $orderId . '"';
+    $result = $conn->query($sql)->fetch_assoc();
+    return $result;
+}
+
+function getAppointmentByDoctorId($conn, $doctorId)
+{
+    $sql = "CALL getAppointmentsByDoctorId($doctorId)";
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt === false) {
+        return array();
+    }
+
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $allAppointments = $result->fetch_all(MYSQLI_ASSOC);
+        return $allAppointments;
+    } else {
+        return array();
+    }
+}

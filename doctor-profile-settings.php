@@ -120,6 +120,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pageTitle = "Doctor | Profile Settings";
     require_once "components/header.php"
     ?>
+
+
+
+    <style>
+        ::backdrop {
+            background-image: linear-gradient(45deg,
+                    magenta,
+                    rebeccapurple,
+                    dodgerblue,
+                    green);
+            opacity: 0.75;
+        }
+    </style>
+
+
 </head>
 
 <body>
@@ -134,6 +149,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once "components/banner.php";
     banner(title: "Profile Settings", path: "Doctor Profile Settings");
     ?>
+
+
+
+
 
     <div class="w-[92%] md:w-[85%] mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-9 my-20 gap-4">
@@ -253,6 +272,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <button class="w-full md:w-fit disabled:opacity-50  text-center bg-[<?php echo $color['primary'] ?>]/80 hover:bg-[<?php echo $color['primary'] ?>] duration-500 text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium" type="submit">Save Changes</button>
                     </div>
                 </form>
+
+                <div class="border-2 border-red-500 py-4 mt-6 rounded-lg px-4">
+                    <h1 class="text-2xl md:text-3xl font-bold mb-7">Danger Zone</h1>
+
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-xl font-medium">Delete my Account?</h2>
+                            <p>Once you delete, there is no going back. Please be certain.</p>
+                        </div>
+                        <form action="providers/delete-my-account.php" method="POST">
+                            <input type="hidden" name="action" value="delete-doctor-account">
+                            <input type="hidden" name="doctorId" value="<?php echo $userData['doctorId'] ?>">
+                            <button onclick="createDialog('delete', 'he')" class="text-red-500 bg-transparent border-2 border-red-500 hover:text-white hover:bg-red-500 duration-500 w-fit p-2 rounded-lg">Delete my account</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -270,6 +305,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ?>
 
 
+
     <script>
         function updateFileName() {
             var input = document.getElementById('doctor-file-upload');
@@ -284,7 +320,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.getElementById('doctorProfileForm').submit();
         });
     </script>
-
 </body>
 
 </html>
