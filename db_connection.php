@@ -497,6 +497,12 @@ function bookAppointment($conn, $data)
     return true;
 }
 
+
+function genereateInvoice()
+{
+}
+
+
 function getPatientAllAppointments($conn, $patientId)
 {
     $sql = "CALL getAppointmentsWithDoctorInfo($patientId)";
@@ -588,3 +594,5 @@ function getAppointmentByDoctorId($conn, $doctorId)
         return array();
     }
 }
+
+

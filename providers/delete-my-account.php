@@ -22,6 +22,7 @@ function executeDelete($conn, $sql, $params)
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
+
     if (isset($_POST['action']) && $_POST['action'] == "delete-account") {
 
         $userType = $_POST['userType'] ?? '';
@@ -53,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $deleteSuccess &= executeDelete($conn, "DELETE FROM " . $userType . "_image_path WHERE " . $userType . "Id = ?", ['i', $userId]);
 
         // Finally, delete from parent tables
-        $deleteSuccess &= executeDelete($conn, "DELETE FROM appointment WHERE patientId = ?", ['i', $userId]);
+        $deleteSuccess &= executeDelete($conn, "DELETE FROM appointment WHERE " . $userType . "Id = ?", ['i', $userId]);
         $deleteSuccess &= executeDelete($conn, "DELETE FROM " . $userType . " WHERE " . $userType . "Id = ?", ['i', $userId]);
         $deleteSuccess &= executeDelete($conn, "DELETE FROM registration WHERE userId = ?", ['i', $userId]);
 

@@ -250,7 +250,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <select class="outline-none p-3 rounded-md border-2 text-gray-500" name="specialization" id="specialization">
                                     <option value="">Select your specialization</option>
                                     <?php foreach ($allSpecialization as $spec) : ?>
-                                        <option value="<?php echo htmlspecialchars($spec['name']); ?>" <?php echo $doctorSpecialization['specialization'] ?? "" == $spec['name'] ? "selected" : "" ?>>
+                                        <option value="<?php echo htmlspecialchars($spec['name']); ?>" <?php
+                                                                                                        if (isset($doctorSpecialization['specialization'])) {
+                                                                                                            if ($doctorSpecialization['specialization'] == $spec['name']) {
+                                                                                                                echo "selected";
+                                                                                                            }
+                                                                                                        }
+                                                                                                        ?>>
                                             <?php echo htmlspecialchars($spec['name']); ?>
                                         </option>
                                     <?php endforeach; ?>
