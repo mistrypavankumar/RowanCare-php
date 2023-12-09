@@ -63,55 +63,57 @@ $result = getUserType();
                             <div>
                                 <h3 class="text-xl font-bold mb-4">Appointments</h3>
 
-                                <table class="w-full py-2">
-                                    <tr class="py-2 border-b-2">
-                                        <th class="py-3 text-left">Doctor</th>
-                                        <th class="text-left">Appt Date</th>
-                                        <th class="text-left">Booking Date</th>
-                                        <th class="text-left">Amount</th>
-                                        <th class="text-left">Status</th>
-                                        <th class="text-left">Action</th>
-                                    </tr>
-
-                                    <?php foreach ($getAllAppointments as $appt) {
-
-                                        $res = $appt['appointmentDate'];
-                                        $apptDate = date('d M Y', strtotime($res));
-
-                                        $bookedAt = date("d M Y", strtotime($appt['bookingDate']));
-                                    ?>
-                                        <tr class="py-2 border-b-2 last:border-b-0 hover:bg-gray-100 duration-500">
-                                            <td class="py-3">
-                                                <a href="#" class="flex gap-3 items-center">
-                                                    <img class="w-[40px] h-[40px] rounded-full object-cover" src="<?php echo $appt['imagePath'] ?>" alt="profile">
-                                                    <div>
-                                                        <p class="text-[15px]"> <?php echo  $appt['firstName'] . " " . $appt['lastName'] ?>
-                                                        </p>
-                                                        <p class="text-xs text-gray-500"> <?php echo  $appt['specialization'] ?></p>
-                                                    </div>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <p class="text-[15px]"><?php echo $apptDate ?></p>
-                                                <p class="text-[15px] text-blue-500"><?php echo $appt['appointmentTime'] ?></p>
-                                            </td>
-                                            <td><?php echo $bookedAt ?></td>
-                                            <td>$<?php echo $appt['amount'] ?></td>
-                                            <td>
-                                                <p class="<?php
-                                                            if ($appt['status'] == "Confirmed") {
-                                                                echo "bg-green-500/20 text-green-500 ";
-                                                            } elseif ($appt['status'] == "Cancelled") {
-                                                                echo "bg-red-500/20 text-red-500 ";
-                                                            } else {
-                                                                echo "bg-orange-500/20 text-orange-500 ";
-                                                            }
-                                                            ?> text-center rounded-full text-xs font-semibold py-[1px] w-fit px-2"><?php echo $appt['status'] ?></p>
-                                            </td>
-                                            <td>View</td>
+                                <div class="h-[77vh] overflow-y-auto">
+                                    <table class="w-full py-2">
+                                        <tr class="py-2 border-b-2">
+                                            <th class="py-3 text-left">Doctor</th>
+                                            <th class="text-left">Appt Date</th>
+                                            <th class="text-left">Booking Date</th>
+                                            <th class="text-left">Amount</th>
+                                            <th class="text-left">Status</th>
+                                            <th class="text-left">Action</th>
                                         </tr>
-                                    <?php } ?>
-                                </table>
+
+                                        <?php foreach ($getAllAppointments as $appt) {
+
+                                            $res = $appt['appointmentDate'];
+                                            $apptDate = date('d M Y', strtotime($res));
+
+                                            $bookedAt = date("d M Y", strtotime($appt['bookingDate']));
+                                        ?>
+                                            <tr class="py-2 border-b-2 last:border-b-0 hover:bg-gray-100 duration-500">
+                                                <td class="py-3">
+                                                    <a href="#" class="flex gap-3 items-center">
+                                                        <img class="w-[40px] h-[40px] rounded-full object-cover" src="<?php echo $appt['imagePath'] ?>" alt="profile">
+                                                        <div>
+                                                            <p class="text-[15px]"> <?php echo  $appt['firstName'] . " " . $appt['lastName'] ?>
+                                                            </p>
+                                                            <p class="text-xs text-gray-500"> <?php echo  $appt['specialization'] ?></p>
+                                                        </div>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <p class="text-[15px]"><?php echo $apptDate ?></p>
+                                                    <p class="text-[15px] text-blue-500"><?php echo $appt['appointmentTime'] ?></p>
+                                                </td>
+                                                <td><?php echo $bookedAt ?></td>
+                                                <td>$<?php echo $appt['amount'] ?></td>
+                                                <td>
+                                                    <p class="<?php
+                                                                if ($appt['status'] == "Confirmed") {
+                                                                    echo "bg-green-500/20 text-green-500 ";
+                                                                } elseif ($appt['status'] == "Cancelled") {
+                                                                    echo "bg-red-500/20 text-red-500 ";
+                                                                } else {
+                                                                    echo "bg-orange-500/20 text-orange-500 ";
+                                                                }
+                                                                ?> text-center rounded-full text-xs font-semibold py-[1px] w-fit px-2"><?php echo $appt['status'] ?></p>
+                                                </td>
+                                                <td>View</td>
+                                            </tr>
+                                        <?php } ?>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

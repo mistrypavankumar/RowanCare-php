@@ -34,16 +34,16 @@ function stickyNavbar($isLoggedIn = false, $logoPath = "./assets/logo/Rowancare-
                 <a class="<?php
                             echo "text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
                             echo $page == "pharmacy.php" ? " text-[#0D57E3]" : "";
-                            ?>" href="pharmacy.php">Pharmacy</a>
+                            ?>" href="#">Pharmacy</a>
 
                 <a class="<?php
                             echo "text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
                             echo $page == "aboutus.php" ? " text-[#0D57E3]" : "";
-                            ?>" href="aboutus.php">About Us</a>
+                            ?>" href="#">About Us</a>
                 <a class="<?php
                             echo "text-[17px] duration-300 font-medium hover:text-[#0D57E3]";
                             echo $page == "contactus.php" ? " text-[#0D57E3]" : "";
-                            ?>" href="contactus.php">Contact Us</a>
+                            ?>" href="#">Contact Us</a>
 
             </div>
             <div class="hidden md:flex gap-5">

@@ -150,7 +150,7 @@ $patientDashboardNav = [
   ],
   [
     'label' => "Billing",
-    'path' => "",
+    'path' => "patient-invoices.php",
     'icon' => "fa-clock-o",
   ],
   [

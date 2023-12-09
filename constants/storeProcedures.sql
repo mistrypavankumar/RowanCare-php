@@ -40,8 +40,8 @@ DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE getDoctorsPatientData(IN doctorId INT)
 BEGIN
-	SELECT *
+	SELECT DISTINCT p.*
 	FROM patient p
-	LEFT JOIN appointment a ON p.patientId = a.patientId AND a.doctorId = doctorId;
+	JOIN appointment a ON p.patientId = a.patientId AND a.doctorId = doctorId ORDER BY p.patientId DESC;
 END $$
 DELIMITER ;

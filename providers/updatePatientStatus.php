@@ -30,7 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $res =  executeUpdate(conn: $conn, sql: 'UPDATE appointment SET status = "Confirmed" WHERE orderId = ?', params: ['s', $_POST['appointmentOrderId']]);
         message($res, "Accept");
     } elseif ($_POST['action'] == "cancel") {
-        $res = executeUpdate(conn: $conn, sql: 'UPDATE appointment SET status = "Cancelled" WHERE orderId = ?', params: ['s', $_POST['appointmentOrderId']]);
+        $res &= executeUpdate(conn: $conn, sql: 'UPDATE appointment SET status = "Cancelled" WHERE orderId = ?', params: ['s', $_POST['appointmentOrderId']]);
+        $res &= executeUpdate(conn: $conn, sql: "UPDATE invoice SET status = 'Refunded' WHERE orderId = ?", params: ['s', $_POST['appointmentOrderId']]);
         message($res, "Cancell");
     }
 
