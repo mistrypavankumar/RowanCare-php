@@ -117,7 +117,7 @@ $doctorDashboardNav = [
   ],
   [
     'label' => "Change Password",
-    'path' => "",
+    'path' => "change-password.php",
     'icon' => "fa-lock",
   ],
   [
@@ -160,7 +160,7 @@ $patientDashboardNav = [
   ],
   [
     'label' => "Change Password",
-    'path' => "",
+    'path' => "change-password.php",
     'icon' => "fa-lock",
   ],
   [

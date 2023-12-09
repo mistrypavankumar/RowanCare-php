@@ -29,7 +29,6 @@ function getUserType()
         $isLoading = true; // role not found
     }
 
+
     return ["userType" => $userType, "isLoading" => $isLoading];
 }
-
-?>

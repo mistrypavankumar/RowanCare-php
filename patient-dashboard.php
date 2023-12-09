@@ -6,13 +6,12 @@ require "components/getUserType.php";
 
 $result = getUserType();
 
+session_start();
+$_SESSION['userType'] = $result['userType'];
+$_SESSION['isLoading'] = $result['isLoading'];
 ?>
 
 
-<?php
-
-
-?>
 
 <!DOCTYPE html>
 <html lang="en">
