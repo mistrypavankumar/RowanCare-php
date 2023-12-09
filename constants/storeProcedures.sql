@@ -36,3 +36,12 @@ BEGIN
 
 END $$
 DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE getDoctorsPatientData(IN doctorId INT)
+BEGIN
+	SELECT *
+	FROM patient p
+	LEFT JOIN appointment a ON p.patientId = a.patientId AND a.doctorId = doctorId;
+END $$
+DELIMITER ;
