@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 
-function execuateSqlQuery($conn, $sql = "", $param = null)
+function execuateSqlQuery($conn, $sql = "", $params = null)
 {
     $stmt = $conn->prepare($sql);
 
@@ -21,11 +21,11 @@ function execuateSqlQuery($conn, $sql = "", $param = null)
         return ["status" => 300, "message" => "Failed to prepare the sql query"];
     }
 
-    if ($param) {
-        $stmt->bind_param(...$param);
+    if ($params) {
+        $stmt->bind_param(...$params);
     }
 
-    if (!$stmt->execute($param)) {
+    if (!$stmt->execute()) {
         return ["status" => 300, "message" => "Failed to execute the query"];
     }
 
@@ -589,6 +589,26 @@ function getDoctorsPatientData($conn, $doctorId)
 {
     $res = execuateSqlQuery(conn: $conn, sql: "CALL getDoctorsPatientData($doctorId)");
 
+    if ($res['status'] == 300) {
+        return [];
+    } else {
+        return $res['data'];
+    }
+}
+
+function getInvoicesById($conn, $userId, $userType)
+{
+    $res = execuateSqlQuery(conn: $conn, sql: "SELECT * FROM invoice WHERE " . $userType . "Id = ? ORDER BY invoiceId DESC", params: ['i', $userId]);
+    if ($res['status'] == 300) {
+        return [];
+    } else {
+        return $res['data'];
+    }
+}
+
+function getUserDataByUserId($conn, $userId, $userType)
+{
+    $res = execuateSqlQuery(conn: $conn, sql: "SELECT * FROM " . $userType . " WHERE " . $userType . "Id = ?", params: ['i', $userId]);
     if ($res['status'] == 300) {
         return [];
     } else {

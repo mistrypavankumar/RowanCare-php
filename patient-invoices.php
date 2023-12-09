@@ -7,10 +7,10 @@ require_once 'components/functions.php';
 
 $result = getUserType();
 
-if (isset($_COOKIE['rowanCaredoctor'])) {
-    $userIdentifier = $_COOKIE['rowanCaredoctor'];
+if (isset($_COOKIE['rowanCarepatient'])) {
+    $userIdentifier = $_COOKIE['rowanCarepatient'];
     $userData = getUserData($conn, $userIdentifier, $result['userType']);
-    $doctorInvoices = getInvoicesById($conn, $userData['doctorId'], 'doctor');
+    $patientInvoices = getInvoicesById($conn, $userData['patientId'], 'patient');
 }
 
 
@@ -42,7 +42,7 @@ if (isset($_COOKIE['rowanCaredoctor'])) {
             <div class="grid grid-cols-1 md:grid-cols-9 my-20 gap-4">
                 <?php
                 require_once "components/dashboard-navigation.php";
-                dashboardNavigation($conn, $userData, $doctorDashboardNav, $color, $result['userType'], profileImage: $profileImage['imagePath'] ?? "");
+                dashboardNavigation($conn, $userData, $patientDashboardNav, $color, $result['userType'], profileImage: $profileImage['imagePath'] ?? "");
                 ?>
                 <div class="col-span-9 md:col-span-7">
                     <div class="border-2 rounded-lg p-5">
@@ -54,17 +54,17 @@ if (isset($_COOKIE['rowanCaredoctor'])) {
                                     <thead class="sticky top-0 bg-white">
                                         <tr class="py-2 border-b-2">
                                             <th class="py-3 text-left">Invoice No</th>
-                                            <th class="text-left">Patient</th>
+                                            <th class="text-left">Doctor</th>
                                             <th class="text-left">Amount</th>
                                             <th class="text-left">Paid On</th>
                                             <th class="text-left">Action</th>
                                         </tr>
                                     </thead>
 
-                                    <?php foreach ($doctorInvoices as $invoice) {
+                                    <?php foreach ($patientInvoices as $invoice) {
 
-                                        $patiendData = getUserDataByUserId($conn, $invoice['patientId'], 'patient')[0];
-                                        $profileImage = getProfileImage($conn, $invoice['patientId'], "patient");
+                                        $doctorData = getUserDataByUserId($conn, $invoice['doctorId'], 'doctor')[0];
+                                        $profileImage = getProfileImage($conn, $invoice['doctorId'], "doctor");
                                         $res = $invoice['paid_on'];
                                         $paidOn = date('d M Y', strtotime($res));
                                     ?>
@@ -76,15 +76,14 @@ if (isset($_COOKIE['rowanCaredoctor'])) {
                                                 <a href="#" class="flex gap-3 items-center">
                                                     <?php if (empty($profileImage['imagePath'])) : ?>
                                                         <div class="w-[40px] h-[40px] rounded-full bg-gray-200 flex items-center justify-center">
-                                                            <p class="font-semibold text-gray-500"><?php echo getFirstLetter($patiendData['firstName']) ?></p>
+                                                            <p class="font-semibold text-gray-500"><?php echo getFirstLetter($doctorData['firstName']) ?></p>
                                                         </div>
                                                     <?php else : ?>
                                                         <img class="w-[40px] h-[40px] rounded-full object-cover" src="<?php echo $profileImage['imagePath'] ?>" alt="profile">
                                                     <?php endif ?>
                                                     <div>
-                                                        <p class="text-[15px]"> <?php echo  $patiendData['firstName'] . " " . $patiendData['lastName'] ?>
+                                                        <p class="text-[15px]"> <?php echo  $doctorData['firstName'] . " " . $doctorData['lastName'] ?>
                                                         </p>
-                                                        <p class="text-xs text-gray-500"> #<?php echo explode("_", $invoice['orderId'])[1] ?></p>
                                                     </div>
                                                 </a>
                                             </td>
