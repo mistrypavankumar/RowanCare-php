@@ -21,6 +21,8 @@ if (isset($_COOKIE['rowanCarepatient'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $patientData = [
+        'firstName' => $_POST['firstName'],
+        'lastName' => $_POST['lastName'],
         'dateOfBirth' => $_POST['dateOfBirth'],
         'address' => $_POST['address'],
         'bloodGroup' => $_POST['bloodGroup'],
@@ -134,9 +136,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             dashboardNavigation($conn, $userData, $patientDashboardNav, $color, $result['userType'], profileImage: $profileImage['imagePath'] ?? "");
             ?>
 
-            <div class="col-span-9 md:col-span-7 border-2 rounded-lg px-5 py-5">
+            <div class="col-span-9 md:col-span-7">
 
-                <form id="patientProfileForm" method="POST" action="patient-profile-settings.php" enctype="multipart/form-data">
+                <form class="border-2 rounded-lg px-5 py-5" id="patientProfileForm" method="POST" action="patient-profile-settings.php" enctype="multipart/form-data">
                     <?php
                     require_once 'components/uploadProfile.php';
                     uploadProfile($userData, name: "patient-file-upload", profileImage: $profileImage['imagePath'] ?? "");
@@ -145,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                         <div class="col-span-1 space-y-3">
 
                             <?php
-                            textInputField(data: $userData, label: "First Name", textType: "text", value: "firstName", disabled: "disabled");
+                            textInputField(data: $userData, label: "First Name", textType: "text", value: "firstName");
                             textInputField(data: $userData, label: "Date of Birth", textType: "date", value: "dateOfBirth");
                             textInputField(data: $userData, label: "Email ID", textType: "email", value: "email", disabled: "disabled");
                             ?>
@@ -153,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                         </div>
                         <div class="col-span-1 space-y-3">
                             <?php
-                            textInputField(data: $userData, label: "Last Name", textType: "text", value: "lastName", disabled: "disabled");
+                            textInputField(data: $userData, label: "Last Name", textType: "text", value: "lastName");
                             ?>
 
                             <div class="flex flex-col gap-2">
@@ -229,16 +231,30 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                         <button class="w-full md:w-fit disabled:opacity-50  text-center bg-[<?php echo $color['primary'] ?>]/80 hover:bg-[<?php echo $color['primary'] ?>] duration-500 text-white px-10 py-3 rounded-md outline-none border-none cursor-pointer flex items-center sm:w-fit justify-center font-medium" type="submit">Save Changes</button>
                     </div>
                 </form>
+
+                <div class="border-2 border-red-500 py-4 mt-6 rounded-lg px-4">
+                    <h1 class="text-2xl md:text-3xl font-bold mb-7">Danger Zone</h1>
+
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-xl font-medium">Delete my Account?</h2>
+                            <p>Once you delete, there is no going back. Please be certain.</p>
+                        </div>
+                        <form action="providers/delete-my-account.php" method="POST">
+                            <input type="hidden" name="action" value="delete-account">
+                            <input type="hidden" name="userType" value="patient">
+                            <input type="hidden" name="patientId" value="<?php echo $userData['patientId'] ?>">
+                            <button class="text-red-500 bg-transparent border-2 border-red-500 hover:text-white hover:bg-red-500 duration-500 w-fit p-2 rounded-lg">Delete my account</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
 
     <!-- footer -->
-    <?php
-    require_once "components/footer.php";
-    footer();
-    ?>
+
 
 
     <?php

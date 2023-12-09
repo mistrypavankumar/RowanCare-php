@@ -58,7 +58,7 @@ $result = getUserType();
                     require_once "components/dashboard-navigation.php";
                     dashboardNavigation($conn, $userData, $patientDashboardNav, $color, $result['userType'], $profileImage['imagePath'] ?? "");
                     ?>
-                    <div class="col-span-7 border-white border-2">
+                    <div class="col-span-9 md:col-span-7 border-white border-2">
                         <div class="border-2 rounded-lg p-5">
                             <div>
                                 <h3 class="text-xl font-bold mb-4">Appointments</h3>

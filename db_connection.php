@@ -1,4 +1,5 @@
 <?php
+
 $servername = "localhost";
 $username = "root";
 $password = "yourmysqlpassword";
@@ -10,6 +11,33 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+
+function execuateSqlQuery($conn, $sql = "", $param = null)
+{
+    $stmt = $conn->prepare($sql);
+
+    if (!$stmt) {
+        return ["status" => 300, "message" => "Failed to prepare the sql query"];
+    }
+
+    if ($param) {
+        $stmt->bind_param(...$param);
+    }
+
+    if (!$stmt->execute($param)) {
+        return ["status" => 300, "message" => "Failed to execute the query"];
+    }
+
+    $result = $stmt->get_result();
+
+    if ($result) {
+        return ['status' => 200, "data" => $result->fetch_all(MYSQLI_ASSOC)];
+    } else {
+        return ["status" => 300, "message" => "Failed to fetch result: " . $stmt->error];
+    }
+}
+
 
 
 function registerUser($conn, $firstName, $lastName, $phoneNumber, $email, $password, $userType)
@@ -254,9 +282,9 @@ function getAddress($conn, $userId, $userType)
 
 function updatePatientProfile($conn, $userData, $patientData)
 {
-    $sql = "UPDATE patient SET dateOfBirth = ?, bloodGroup = ?, gender = ? WHERE email = ?";
+    $sql = "UPDATE patient SET firstName = ?, lastName = ?, dateOfBirth = ?, bloodGroup = ?, gender = ? WHERE email = ?";
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("ssss", $patientData['dateOfBirth'], $patientData['bloodGroup'], $patientData['gender'], $userData['email']);
+        $stmt->bind_param("ssssss", $patientData['firstName'], $patientData['lastName'], $patientData['dateOfBirth'], $patientData['bloodGroup'], $patientData['gender'], $userData['email']);
         $stmt->execute();
         $stmt->close();
 
@@ -267,54 +295,15 @@ function updatePatientProfile($conn, $userData, $patientData)
 
 function updateDoctorProfile($conn, $userData, $doctorData)
 {
-    $sql = "UPDATE doctor SET dateOfBirth = ?, gender = ? WHERE email = ?";
+    $sql = "UPDATE doctor SET firstName = ?, lastName = ?, dateOfBirth = ?, gender = ? WHERE email = ?";
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("sss", $doctorData['dateOfBirth'], $doctorData['gender'], $userData['email']);
+        $stmt->bind_param("sssss",  $doctorData['firstName'], $doctorData['lastName'], $doctorData['dateOfBirth'], $doctorData['gender'], $userData['email']);
         $stmt->execute();
         $stmt->close();
         return updateAddress($conn, $userData['doctorId'], 'doctor', $doctorData);
     }
     return false;
 }
-
-// function insertOrUpdateFeeRange($conn, $doctorId, $minFee, $maxFee)
-// {
-//     $select = "SELECT * FROM feerange WHERE doctorId = ?";
-//     $stmt = $conn->prepare($select);
-//     if (!$stmt) {
-//         return false;
-//     }
-
-//     $stmt->bind_param("i", $doctorId);
-//     $stmt->execute();
-//     $result = $stmt->get_result();
-
-//     if ($result->num_rows > 0) {
-//         $update = "UPDATE feerange SET minFee = ?, maxFee = ? WHERE doctorId = ?";
-//         $stmt = $conn->prepare($update);
-//         if (!$stmt) {
-//             return false;
-//         }
-
-//         $stmt->bind_param("iii", $minFee, $maxFee, $doctorId);
-//     } else {
-//         $insert = "INSERT INTO feerange (doctorId, minFee, maxFee) VALUES (?, ?, ?)";
-//         $stmt = $conn->prepare($insert);
-//         if (!$stmt) {
-//             return false;
-//         }
-
-//         $stmt->bind_param("iii", $doctorId, $minFee, $maxFee);
-//     }
-
-//     if (!$stmt->execute()) {
-//         return false;
-//     }
-
-//     $stmt->close();
-//     return true;
-// }
-
 
 function getFeeRange($conn, $doctorId)
 {
@@ -497,6 +486,12 @@ function bookAppointment($conn, $data)
     return true;
 }
 
+
+function genereateInvoice()
+{
+}
+
+
 function getPatientAllAppointments($conn, $patientId)
 {
     $sql = "CALL getAppointmentsWithDoctorInfo($patientId)";
@@ -586,5 +581,17 @@ function getAppointmentByDoctorId($conn, $doctorId)
         return $allAppointments;
     } else {
         return array();
+    }
+}
+
+
+function getDoctorsPatientData($conn, $doctorId)
+{
+    $res = execuateSqlQuery(conn: $conn, sql: "CALL getDoctorsPatientData($doctorId)");
+
+    if ($res['status'] == 300) {
+        return [];
+    } else {
+        return $res['data'];
     }
 }

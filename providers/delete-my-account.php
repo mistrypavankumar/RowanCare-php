@@ -2,36 +2,71 @@
 
 include '../db_connection.php';
 
-function executeDelete($conn, $sql = "", $params = null)
+function executeDelete($conn, $sql, $params)
 {
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
+        error_log("Prepare failed: " . $conn->error);
         return false;
     }
 
     $stmt->bind_param(...$params);
-    $stmt->execute();
+
+    if (!$stmt->execute()) {
+        error_log("Execute failed: " . $stmt->error);
+        return false;
+    }
+
+    $stmt->close();
     return true;
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-    echo $_POST['doctorId'];
+    if (isset($_POST['action']) && $_POST['action'] == "delete-account") {
 
-    if ($_POST['action'] == "delete-doctor-account") {
-        $doctorId = $_POST['doctorId'];
-        executeDelete(conn: $conn, sql: "DELETE FROM registration WHERE userId = ?", params: ['i', $doctorId]);
-        executeDelete(conn: $conn, sql: "DELETE FROM doctor WHERE doctorId = ?", params: ['i', $doctorId]);
-        executeDelete(conn: $conn, sql: "DELETE FROM doctor_image_path WHERE doctorId = ?", params: ['i', $doctorId]);
-        executeDelete(conn: $conn, sql: "DELETE FROM doctor_address WHERE doctorId = ?", params: ['i', $doctorId]);
-        executeDelete(conn: $conn, sql: "DELETE FROM doctor_specialization WHERE doctorId = ?", params: ['i', $doctorId]);
+        $userType = $_POST['userType'] ?? '';
 
-        header('location: ../logout.php');
-    }
+        // Sanitize and validate user inputs
+        if (!in_array($userType, ['patient', 'doctor'])) {
+            // Handle error - unknown user type
+            exit('Invalid user type');
+        }
 
-    if ($_POST['action'] == "delete-patient-account") {
-        $patientid = $_POST['patientid'];
-        $res = executeDelete(conn: $conn, sql: "DELETE FROM registration WHERE userId = ?", params: ['i', $patientid]);
-        header('location: logout.php');
+        $userId = $_POST[$userType . "Id"] ?? '';
+
+        if (!is_numeric($userId)) {
+            // Handle error - invalid user ID
+            exit('Invalid user ID');
+        }
+
+        // Begin transaction
+        $conn->begin_transaction();
+
+        $deleteSuccess = true;
+
+        // Delete from child tables first
+        if ($userType == 'doctor') {
+            $deleteSuccess &= executeDelete($conn, "DELETE FROM doctor_specialization WHERE doctorId = ?", ['i', $userId]);
+        }
+
+        $deleteSuccess &= executeDelete($conn, "DELETE FROM " . $userType . "_address WHERE " . $userType . "Id = ?", ['i', $userId]);
+        $deleteSuccess &= executeDelete($conn, "DELETE FROM " . $userType . "_image_path WHERE " . $userType . "Id = ?", ['i', $userId]);
+
+        // Finally, delete from parent tables
+        $deleteSuccess &= executeDelete($conn, "DELETE FROM appointment WHERE " . $userType . "Id = ?", ['i', $userId]);
+        $deleteSuccess &= executeDelete($conn, "DELETE FROM " . $userType . " WHERE " . $userType . "Id = ?", ['i', $userId]);
+        $deleteSuccess &= executeDelete($conn, "DELETE FROM registration WHERE userId = ?", ['i', $userId]);
+
+
+        if ($deleteSuccess) {
+            $conn->commit();
+            header('Location: ../logout.php');
+            exit();
+        } else {
+            // Handle error - deletion failed
+            $conn->rollback();
+            exit('Error in deletion process');
+        }
     }
 }
