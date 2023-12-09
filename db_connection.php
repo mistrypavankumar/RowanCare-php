@@ -615,3 +615,39 @@ function getUserDataByUserId($conn, $userId, $userType)
         return $res['data'];
     }
 }
+
+
+function changePassword($conn, $email, $oldPassword, $newPassword)
+{
+    // Check if the old password is correct
+    $checkQuery = "SELECT password FROM registration WHERE email = ?";
+    $stmt = $conn->prepare($checkQuery);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        return false; // User not found
+    }
+
+    $user = $result->fetch_assoc();
+    if (!password_verify($oldPassword, $user['password'])) {
+        return false; // Old password is incorrect
+    }
+
+    // Update the password
+    $conn->begin_transaction();
+    try {
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+        $updateQuery = "UPDATE registration SET password = ? WHERE email = ?";
+        $stmt = $conn->prepare($updateQuery);
+        $stmt->bind_param("ss", $hashedPassword, $email);
+        $stmt->execute();
+
+        $conn->commit();
+        return true; // Password successfully updated
+    } catch (Exception $err) {
+        $conn->rollback();
+        return false; // Error occurred
+    }
+}

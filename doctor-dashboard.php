@@ -7,6 +7,10 @@ require_once 'components/functions.php';
 
 $result = getUserType();
 
+session_start();
+$_SESSION['userType'] = $result['userType'];
+$_SESSION['isLoading'] = $result['isLoading'];
+
 
 function progressCard($title, $label1, $label2, $progressColor, $iconName)
 {
