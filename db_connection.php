@@ -547,7 +547,7 @@ function getProgressData($conn, $doctorId)
         $res['todaysPatients'] = $result['todaysPatients'];
     }
 
-    $result = executeQuery($conn, "SELECT COUNT(*) as totalAppointments FROM appointment WHERE doctorId = ? and DATE(bookingDate) = CURDATE()", ['i', $doctorId]);
+    $result = executeQuery($conn, "SELECT COUNT(patientId) as totalAppointments FROM appointment WHERE doctorId = ?", ['i', $doctorId]);
     if ($result !== null) {
         $res['totalAppointments'] = $result['totalAppointments'];
     }

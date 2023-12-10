@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $deleteSuccess &= executeDelete($conn, "DELETE FROM appointment WHERE " . $userType . "Id = ?", ['i', $userId]);
         $deleteSuccess &= executeDelete($conn, "DELETE FROM " . $userType . " WHERE " . $userType . "Id = ?", ['i', $userId]);
         $deleteSuccess &= executeDelete($conn, "DELETE FROM registration WHERE userId = ?", ['i', $userId]);
+        $deleteSuccess &= executeDelete($conn, "DELETE FROM invoice WHERE " . $userType . "Id = ?", ['i', $userId]);
 
 
         if ($deleteSuccess) {
