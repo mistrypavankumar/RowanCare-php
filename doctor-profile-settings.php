@@ -290,6 +290,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <form action="providers/delete-my-account.php" method="POST">
                             <input type="hidden" name="action" value="delete-account">
                             <input type="hidden" name="userType" value="doctor">
+                            <input type="hidden" name="orderId" value="doctor">
                             <input type="hidden" name="doctorId" value="<?php echo $userData['doctorId'] ?>">
                             <button class="text-red-500 bg-transparent border-2 border-red-500 hover:text-white hover:bg-red-500 duration-500 w-fit p-2 rounded-lg">Delete my account</button>
                         </form>
