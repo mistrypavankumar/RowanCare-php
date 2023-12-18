@@ -79,8 +79,8 @@ $currentDate = date("d M Y");
                     <div class="grid grid-cols-1 md:grid-cols-9 border-2 rounded-lg p-7 flex justify-between gap-8">
                         <?php
 
-                        progressCard("Total Patient", $progressCardData['totalPatients'], "Till Today", "red", "icon-01.png");
-                        progressCard("Today Patient", $progressCardData['todaysPatients'], $currentDate, "green", "icon-02.png");
+                        progressCard("Total Patients", $progressCardData['totalPatients'], "Till Today", "red", "icon-01.png");
+                        progressCard("Todays Patients", $progressCardData['todaysPatients'], $currentDate, "green", "icon-02.png");
                         progressCard("Appointments", $progressCardData['totalAppointments'], $currentDate, "blue", "icon-03.png");
 
                         ?>
