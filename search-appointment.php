@@ -60,9 +60,6 @@ $getAllDoctors = getAllDoctors($conn);
                 <div class="border-2 h-fit col-span-9 md:col-span-2 rounded-lg">
                     <p class="text-xl py-3 px-4 font-medium border-b-2">Search Filter</p>
                     <div id="searchForm" method="POST" class="px-4 py-3">
-
-                        <input type="text" id="genders" name="genders" value="">
-                        <input type="text" id="specializations" name="specializations" value="">
                         <div>
                             <h2 class="font-medium mb-2">Gender</h2>
                             <div class="form-checkbox">
