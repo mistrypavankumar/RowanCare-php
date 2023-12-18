@@ -44,8 +44,6 @@ if (!empty($_POST['GENDERS']) || !empty($_POST['SPECIALIZATIONS'])) {
 
         if (!is_null($doctorData) && !empty($doctorAddress["state"]) && !empty($doctorAddress['country'])) {
             json_encode(doctorCard($doctorData, $specializaiton, $profileImage, $doctorAddress, firstLetters: getFirstLetter($doctor[1]), color: $color));
-        } else {
-            echo json_encode("<p>No Result Found.!<p>");
         }
     }
 }
