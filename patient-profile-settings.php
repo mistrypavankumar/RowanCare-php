@@ -21,17 +21,17 @@ if (isset($_COOKIE['rowanCarepatient'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $patientData = [
-        'firstName' => $_POST['firstName'],
-        'lastName' => $_POST['lastName'],
-        'dateOfBirth' => $_POST['dateOfBirth'],
-        'address' => $_POST['address'],
-        'bloodGroup' => $_POST['bloodGroup'],
-        'city' => $_POST['city'],
-        'state' => $_POST['state'],
-        'country' => $_POST['country'],
-        'gender' => $_POST['gender'],
-        'zipcode' => $_POST['zipcode'],
-        'imagePath' => $profileImage['imagePath'] ?? '', // Set initially as empty
+        'firstName' => isset($_POST['firstName']) ? $_POST['firstName'] : $userData['firstName'],
+        'lastName' => isset($_POST['lastName']) ? $_POST['lastName'] : $userData['lastName'],
+        'dateOfBirth' => isset($_POST['dateOfBirth']) ? $_POST['dateOfBirth'] : $userData['dateOfBirth'],
+        'address' => isset($_POST['address']) ? $_POST['address'] : $patientAddress['address'],
+        'bloodGroup' => isset($_POST['bloodGroup']) ? $_POST['bloodGroup'] : $userData['bloodGroup'],
+        'city' => isset($_POST['city']) ? $_POST['city'] : $patientAddress['city'],
+        'state' => isset($_POST['state']) ? $_POST['state'] : $patientAddress['state'],
+        'country' => isset($_POST['country']) ? $_POST['country'] : $patientAddress['country'],
+        'gender' => isset($_POST['gender']) ? $_POST['gender'] : $userData['gender'],
+        'zipcode' => isset($_POST['zipcode']) ? $_POST['zipcode'] : $patientAddress['zipcode'],
+        'imagePath' => $profileImage['imagePath'] ?? "", // Retain existing image if not updated
     ];
 
     $isNewFileUploaded = false;

@@ -24,16 +24,16 @@ if (isset($_COOKIE['rowanCaredoctor'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $doctorData = [
-        'dateOfBirth' => $_POST['dateOfBirth'],
-        'addressLine1' => $_POST['addressLine1'],
-        'addressLine2' => $_POST['addressLine2'],
-        'firstName' => $_POST['firstName'],
-        'lastName' => $_POST['lastName'],
-        'city' => $_POST['city'],
-        'state' => $_POST['state'],
-        'country' => $_POST['country'],
-        'gender' => $_POST['gender'],
-        'zipcode' => $_POST['zipcode'],
+        'dateOfBirth' => isset($_POST['dateOfBirth']) ? $_POST['dateOfBirth'] : $userData['dateOfBirth'],
+        'addressLine1' => isset($_POST['addressLine1']) ? $_POST['addressLine1'] : $doctorAddress['addressLine1'],
+        'addressLine2' => isset($_POST['addressLine2']) ? $_POST['addressLine2'] : $doctorAddress['addressLine2'],
+        'firstName' => isset($_POST['firstName']) ? $_POST['firstName'] : $userData['firstName'],
+        'lastName' => isset($_POST['lastName']) ? $_POST['lastName'] : $userData['lastName'],
+        'city' => isset($_POST['city']) ? $_POST['city'] : $doctorAddress['city'],
+        'state' => isset($_POST['state']) ? $_POST['state'] : $doctorAddress['state'],
+        'country' => isset($_POST['country']) ? $_POST['country'] : $doctorAddress['country'],
+        'gender' => isset($_POST['gender']) ? $_POST['gender'] : $userData['gender'],
+        'zipcode' => isset($_POST['zipcode']) ? $_POST['zipcode'] : $doctorAddress['zipcode'],
         'imagePath' => $profileImage['imagePath'] ?? "", // Set initially as empty
     ];
 
@@ -95,16 +95,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else {
         if (empty($_SESSION['error_message'])) {
-            $image = addProfileImage(conn: $conn, userId: $userData['doctorId'], image_path: $doctorData['imagePath'], userType: "doctor");
-            $res = updateDoctorProfile($conn, $userData, $doctorData);
-            $sp = insertUpdateSpecialization($conn, $sp, $userData['doctorId']);
+            $updatePerformed = false;
 
-            if ($res || $image || $sp) {
+            // Update profile image only if a new image was uploaded
+            if ($newFileUploaded) {
+                $imageUpdateResult = addProfileImage(
+                    conn: $conn,
+                    userId: $userData['doctorId'],
+                    image_path: $doctorData['imagePath'],
+                    userType: "doctor"
+                );
+                if ($imageUpdateResult) {
+                    $updatePerformed = true;
+                } else {
+                    $_SESSION['error_message'] = "Error updating profile image.";
+                }
+            }
+
+            // Update doctor profile details
+            $profileUpdateResult = updateDoctorProfile($conn, $userData, $doctorData);
+            if ($profileUpdateResult) {
+                $updatePerformed = true;
+            }
+
+            // Update specialization if provided
+            if (!empty($sp['specialization'])) {
+                $specializationUpdateResult = insertUpdateSpecialization(
+                    $conn,
+                    $sp,
+                    $userData['doctorId']
+                );
+                if ($specializationUpdateResult) {
+                    $updatePerformed = true;
+                }
+            }
+
+            // Set success message if any update was performed
+            if ($updatePerformed) {
                 $_SESSION['success_message'] = "All profile details are successfully updated.";
             } else {
-                $_SESSION['error_message'] = $conn->error;
+                // You might want to set an error message only if there isn't one already
+                if (empty($_SESSION['error_message'])) {
+                    $_SESSION['error_message'] = "No changes were made or there was an error.";
+                }
             }
         }
+
+        header("Location: doctor-profile-settings.php");
+        exit();
     }
 
 

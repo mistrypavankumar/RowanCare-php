@@ -182,60 +182,56 @@ function getBestSixDoctors($conn)
     }
 }
 
-function updateAddress($conn, $userId, $userType, $addressData)
+function updatePatientAddress($conn, $userId, $addressData)
 {
-    $sql = "SELECT * from $userType" . "_address" . " where $userType" . "Id" . " = ?";
+    // Check if the patient address already exists
+    $sql = "SELECT * FROM patient_address WHERE patientId = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('i', $userId);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows == 1) {
-        if ($userType == "patient") {
-            $updatePatientData = "UPDATE patient_address SET city=?, state=?, country=?, address=?, zipcode =?, patientId = ?";
-            $stmt = $conn->prepare($updatePatientData);
-            $stmt->bind_param('sssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['address'], $addressData['zipcode'], $userId);
-
-            if ($stmt->execute()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            $updateDoctorData =  "UPDATE doctor_address SET city=?, state=?, country=?, addressLine1=?,addressLine2 =? ,zipcode =?, doctorId = ?";
-            $stmt = $conn->prepare($updateDoctorData);
-            $stmt->bind_param('ssssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['addressLine1'], $addressData['addressLine2'], $addressData['zipcode'], $userId);
-
-            if ($stmt->execute()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+        // Update existing address
+        $updateSql = "UPDATE patient_address SET city = ?, state = ?, country = ?, address = ?, zipcode = ? WHERE patientId = ?";
+        $stmt = $conn->prepare($updateSql);
+        $stmt->bind_param('sssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['address'], $addressData['zipcode'], $userId);
     } else {
-        if ($userType == "patient") {
-            $insertStatement = 'INSERT INTO patient_address ( city, state, country, address,zipcode, patientId) VALUES(?,?,?,?,?,?)';
-            $stmt = $conn->prepare($insertStatement);
-            $stmt->bind_param('sssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['address'], $addressData['zipcode'], $userId);
-
-            if ($stmt->execute()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            $insertStatement = 'INSERT INTO doctor_address ( city, state, country, addressLine1, addressLine2, zipcode, doctorId) VALUES(?,?,?,?,?,?,?)';
-            $stmt = $conn->prepare($insertStatement);
-            $stmt->bind_param('ssssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['addressLine1'], $addressData['addressLine2'], $addressData['zipcode'], $userId);
-
-            if ($stmt->execute()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+        // Insert new address record
+        $insertSql = "INSERT INTO patient_address (city, state, country, address, zipcode, patientId) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($insertSql);
+        $stmt->bind_param('sssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['address'], $addressData['zipcode'], $userId);
     }
+
+    // Execute the query and return the result
+    return $stmt->execute();
 }
+
+function updateDoctorAddress($conn, $userId, $addressData)
+{
+    // Check if the doctor address already exists
+    $sql = "SELECT * FROM doctor_address WHERE doctorId = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 1) {
+        // Update existing address
+        $updateSql = "UPDATE doctor_address SET city = ?, state = ?, country = ?, addressLine1 = ?, addressLine2 = ?, zipcode = ? WHERE doctorId = ?";
+        $stmt = $conn->prepare($updateSql);
+        $stmt->bind_param('ssssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['addressLine1'], $addressData['addressLine2'], $addressData['zipcode'], $userId);
+    } else {
+        // Insert new address record
+        $insertSql = "INSERT INTO doctor_address (city, state, country, addressLine1, addressLine2, zipcode, doctorId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($insertSql);
+        $stmt->bind_param('ssssssi', $addressData['city'], $addressData['state'], $addressData['country'], $addressData['addressLine1'], $addressData['addressLine2'], $addressData['zipcode'], $userId);
+    }
+
+    // Execute the query and return the result
+    return $stmt->execute();
+}
+
 
 
 function insertUpdateSpecialization($conn, $data, $doctorId)
@@ -288,7 +284,7 @@ function updatePatientProfile($conn, $userData, $patientData)
         $stmt->execute();
         $stmt->close();
 
-        return updateAddress($conn, $userData['patientId'], 'patient', $patientData);
+        return updatePatientAddress($conn, $userData['patientId'], $patientData);
     }
     return false;
 }
@@ -300,7 +296,7 @@ function updateDoctorProfile($conn, $userData, $doctorData)
         $stmt->bind_param("sssss",  $doctorData['firstName'], $doctorData['lastName'], $doctorData['dateOfBirth'], $doctorData['gender'], $userData['email']);
         $stmt->execute();
         $stmt->close();
-        return updateAddress($conn, $userData['doctorId'], 'doctor', $doctorData);
+        return updateDoctorAddress($conn, $userData['doctorId'], $doctorData);
     }
     return false;
 }
