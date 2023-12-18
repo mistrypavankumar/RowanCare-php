@@ -27,6 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'dateOfBirth' => $_POST['dateOfBirth'],
         'addressLine1' => $_POST['addressLine1'],
         'addressLine2' => $_POST['addressLine2'],
+        'firstName' => $_POST['firstName'],
+        'lastName' => $_POST['lastName'],
         'city' => $_POST['city'],
         'state' => $_POST['state'],
         'country' => $_POST['country'],
@@ -177,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="col-span-1 space-y-3">
 
                                 <?php
-                                textInputField(data: $userData, label: "First Name", textType: "text", value: "firstName", disabled: "disabled");
+                                textInputField(data: $userData, label: "First Name", textType: "text", value: "firstName",);
                                 textInputField(data: $userData, label: "Date of Birth", textType: "date", value: "dateOfBirth");
                                 textInputField(data: $userData, label: "Email ID", textType: "email", value: "email", disabled: "disabled");
                                 ?>
@@ -185,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="col-span-1 space-y-3">
                                 <?php
-                                textInputField(data: $userData, label: "Last Name", textType: "text", value: "lastName", disabled: "disabled");
+                                textInputField(data: $userData, label: "Last Name", textType: "text", value: "lastName");
                                 ?>
 
                                 <div class="flex flex-col gap-2">

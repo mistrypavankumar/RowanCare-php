@@ -87,7 +87,7 @@ $doctorDashboardNav = [
   ],
   [
     'label' => "Appointments",
-    'path' => "",
+    'path' => "doctor-appointments.php",
     'icon' => "fa-calendar-check-o",
   ],
   [

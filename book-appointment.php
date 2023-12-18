@@ -14,7 +14,7 @@ $specializaiton = getDoctorSpecialization($conn, $doctorId);
 
 $doctorName = $doctorData['firstName'] . " " . $doctorData['lastName'];
 $location = $doctorAddress['state'] . ", " . $doctorAddress['country'];
-$doctorImage = $profileImage['imagePath'];
+$doctorImage = $profileImage['imagePath'] ?? "";
 
 $firstLetters = getFirstLetter($doctorData['firstName']);
 

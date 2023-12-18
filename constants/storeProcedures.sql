@@ -33,7 +33,7 @@ BEGIN
         a.doctorId = doctorId
     ORDER BY 
         a.bookingDate DESC;
-
+    
 END $$
 DELIMITER ;
 
@@ -44,4 +44,24 @@ BEGIN
 	FROM patient p
 	JOIN appointment a ON p.patientId = a.patientId AND a.doctorId = doctorId ORDER BY p.patientId DESC;
 END $$
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE GetMaleDoctorsOrSpecialization(IN genderList VARCHAR(255), IN specializationList VARCHAR(255))
+BEGIN
+    SET @genderQuery = IF(genderList = '', '', CONCAT('d.gender IN (', genderList, ')'));
+    SET @specializationQuery = IF(specializationList = '', '', CONCAT('ds.specialization IN (', specializationList, ')'));
+    SET @andClause = IF(@genderQuery != '' AND @specializationQuery != '', ' AND ', '');
+
+    SET @baseQuery = 'SELECT d.* FROM doctor d JOIN doctor_specialization ds ON ds.doctorId = d.doctorId';
+    SET @whereClause = IF(@genderQuery = '' AND @specializationQuery = '', '', ' WHERE ');
+    SET @query = CONCAT(@baseQuery, @whereClause, @genderQuery, @andClause, @specializationQuery);
+
+    PREPARE stmt FROM @query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END $$
+
 DELIMITER ;
