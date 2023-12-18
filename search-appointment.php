@@ -9,7 +9,6 @@ require 'components/doctorCard.php';
 $specializaitons = getAllSpecializations($conn);
 $getAllDoctors = getAllDoctors($conn);
 
-
 ?>
 
 
@@ -60,20 +59,23 @@ $getAllDoctors = getAllDoctors($conn);
             <div class="grid grid-cols-1 md:grid-cols-9 my-20 gap-4">
                 <div class="border-2 h-fit col-span-9 md:col-span-2 rounded-lg">
                     <p class="text-xl py-3 px-4 font-medium border-b-2">Search Filter</p>
-                    <form action="book-appointment.php" method="post" class="px-4 py-3">
+                    <div id="searchForm" method="POST" class="px-4 py-3">
+
+                        <input type="text" id="genders" name="genders" value="">
+                        <input type="text" id="specializations" name="specializations" value="">
                         <div>
                             <h2 class="font-medium mb-2">Gender</h2>
                             <div class="form-checkbox">
                                 <input type="checkbox" id="genderMale" name="gender" value="male" class="hidden" />
                                 <label for="genderMale" class="text-gray-700 flex items-center cursor-pointer">
-                                    <span class="w-4 h-4 inline-block mr-2 rounded border border-gray-400"></span>
+                                    <span id="maleCheck" class="w-4 h-4 inline-block mr-2 rounded border border-gray-400"></span>
                                     Male Doctor
                                 </label>
                             </div>
                             <div class="form-checkbox">
                                 <input type="checkbox" id="genderFemale" name="gender" value="female" class="hidden" />
                                 <label for="genderFemale" class="text-gray-700 flex items-center cursor-pointer">
-                                    <span class="w-4 h-4 inline-block mr-2 rounded border border-gray-400"></span>
+                                    <span id="femaleCheck" class="w-4 h-4 inline-block mr-2 rounded border border-gray-400"></span>
                                     Female Doctor
                                 </label>
                             </div>
@@ -83,21 +85,18 @@ $getAllDoctors = getAllDoctors($conn);
                             <div>
                                 <?php foreach ($specializaitons as $sp) : ?>
                                     <div class="form-checkbox">
-                                        <input type="checkbox" id="<?php echo $sp['name'] ?>" name="specialization" value="<?php echo $sp['name'] ?>" class="hidden" <?php echo $sp['specializationId'] == 1 ? "checked" : "" ?> />
+                                        <input type="checkbox" id="<?php echo $sp['name'] ?>" name="specialization" value="<?php echo $sp['name'] ?>" class="hidden" />
                                         <label for="<?php echo $sp['name']; ?>" class="flex items-center cursor-pointer text-gray-700">
                                             <span class="w-4 h-4 inline-block mr-2 rounded border border-gray-400"></span>
-                                            <?php echo $sp['name'] ?>
+                                            <?php echo $sp['name']; ?>
                                         </label>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
                         </div>
-                        <div class="row-span-2 bg-red-50">
-                            <button class="text-center bg-[#0D57E3] hover:bg-[#0a43b0] duration-500 text-white w-full py-2 rounded-md outline-none border-none cursor-pointer flex items-center justify-center font-medium" type="submit">Search</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-                <div class="grid col-span-9 md:col-span-7 gap-4">
+                <div id="beforeSearchItems" class="grid col-span-9 md:col-span-7 gap-4">
                     <?php foreach ($getAllDoctors as $doctor) {
                         $profileImage = getProfileImage($conn, $doctor['doctorId'], 'doctor');
                         $doctorAddress = getAddress($conn, $doctor['doctorId'], 'doctor');
@@ -109,6 +108,10 @@ $getAllDoctors = getAllDoctors($conn);
                     }
                     ?>
                 </div>
+
+                <div id="seachedItems" class="grid col-span-9 md:col-span-7 gap-4">
+                    <div id="searchDataRow" class="grid gap-4"></div>
+                </div>
             </div>
         </div>
 
@@ -119,6 +122,60 @@ $getAllDoctors = getAllDoctors($conn);
     require_once "components/footer.php";
     footer();
     ?>
+
+    <script src="js/search.js?v=1"></script>
+    <!-- <script>
+        var checkedGenders = [];
+        var checkedSpecialization = [];
+
+        document.querySelectorAll("#genderMale, #genderFemale").forEach(function(element) {
+            element.addEventListener('change', function() {
+                var value = this.value;
+                if (this.checked) {
+                    checkedGenders.push("'" + value + "'");
+                } else {
+                    var formattedValue = "'" + value + "'";
+                    var index = checkedGenders.indexOf(formattedValue);
+                    if (index > -1) {
+                        checkedGenders.splice(index, 1);
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll("#Cardiology, #Neurology, #Pediatrics, #Orthopedics, #Dentist").forEach(function(element) {
+            element.addEventListener('change', function() {
+                var value = this.value;
+                if (this.checked) {
+                    checkedSpecialization.push("'" + value + "'");
+                } else {
+                    var formattedValue = "'" + value + "'";
+                    var index = checkedSpecialization.indexOf(formattedValue);
+                    if (index > -1) {
+                        checkedSpecialization.splice(index, 1);
+                    }
+                }
+            });
+        });
+
+        document.getElementById("searchDoctorsBtn").addEventListener("click", (e) => {
+            e.preventDefault();
+            const genders = document.getElementById("genders");
+            genders.value = checkedGenders
+
+
+            const specializations = document.getElementById("specializations");
+            specializations.value = checkedSpecialization;
+
+            if (checkedGenders.length === 0 && checkedSpecialization.length === 0) {
+                alert("Please select at least one gender or specialization.");
+
+            } else {
+                document.getElementById("searchForm").submit();
+                document.getElementById('beforeSearchItems').style.display = "none";
+            }
+        });
+    </script> -->
 </body>
 
 </html>

@@ -10,6 +10,7 @@ $result = getUserType();
 if (isset($_COOKIE['rowanCaredoctor'])) {
     $userIdentifier = $_COOKIE['rowanCaredoctor'];
     $userData = getUserData($conn, $userIdentifier, $result['userType']);
+    $doctorProfile = getProfileImage($conn, $userData['doctorId'], "doctor");
     $doctorInvoices = getInvoicesById($conn, $userData['doctorId'], 'doctor');
 }
 
@@ -42,7 +43,7 @@ if (isset($_COOKIE['rowanCaredoctor'])) {
             <div class="grid grid-cols-1 md:grid-cols-9 my-20 gap-4">
                 <?php
                 require_once "components/dashboard-navigation.php";
-                dashboardNavigation($conn, $userData, $doctorDashboardNav, $color, $result['userType'], profileImage: $profileImage['imagePath'] ?? "");
+                dashboardNavigation($conn, $userData, $doctorDashboardNav, $color, $result['userType'], profileImage: $doctorProfile['imagePath'] ?? "");
                 ?>
                 <div class="col-span-9 md:col-span-7">
                     <div class="border-2 rounded-lg p-5">

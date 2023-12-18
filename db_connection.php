@@ -332,7 +332,7 @@ function getFeeRange($conn, $doctorId)
 
 function getAllSpecializations($conn)
 {
-    $sql = "SELECT * from specialization";
+    $sql = "SELECT * from view_specialization";
     $result = $conn->query($sql);
 
     if ($result === false) {
@@ -345,7 +345,7 @@ function getAllSpecializations($conn)
 
 function getAllDoctors($conn)
 {
-    $sql = "SELECT * FROM doctor";
+    $sql = "SELECT * from view_doctor";
     $result = $conn->query($sql);
 
     if ($result === false) {
