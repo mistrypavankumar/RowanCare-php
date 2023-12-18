@@ -124,58 +124,6 @@ $getAllDoctors = getAllDoctors($conn);
     ?>
 
     <script src="js/search.js?v=1"></script>
-    <!-- <script>
-        var checkedGenders = [];
-        var checkedSpecialization = [];
-
-        document.querySelectorAll("#genderMale, #genderFemale").forEach(function(element) {
-            element.addEventListener('change', function() {
-                var value = this.value;
-                if (this.checked) {
-                    checkedGenders.push("'" + value + "'");
-                } else {
-                    var formattedValue = "'" + value + "'";
-                    var index = checkedGenders.indexOf(formattedValue);
-                    if (index > -1) {
-                        checkedGenders.splice(index, 1);
-                    }
-                }
-            });
-        });
-
-        document.querySelectorAll("#Cardiology, #Neurology, #Pediatrics, #Orthopedics, #Dentist").forEach(function(element) {
-            element.addEventListener('change', function() {
-                var value = this.value;
-                if (this.checked) {
-                    checkedSpecialization.push("'" + value + "'");
-                } else {
-                    var formattedValue = "'" + value + "'";
-                    var index = checkedSpecialization.indexOf(formattedValue);
-                    if (index > -1) {
-                        checkedSpecialization.splice(index, 1);
-                    }
-                }
-            });
-        });
-
-        document.getElementById("searchDoctorsBtn").addEventListener("click", (e) => {
-            e.preventDefault();
-            const genders = document.getElementById("genders");
-            genders.value = checkedGenders
-
-
-            const specializations = document.getElementById("specializations");
-            specializations.value = checkedSpecialization;
-
-            if (checkedGenders.length === 0 && checkedSpecialization.length === 0) {
-                alert("Please select at least one gender or specialization.");
-
-            } else {
-                document.getElementById("searchForm").submit();
-                document.getElementById('beforeSearchItems').style.display = "none";
-            }
-        });
-    </script> -->
 </body>
 
 </html>
