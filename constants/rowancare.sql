@@ -38,7 +38,7 @@ CREATE TABLE `appointment` (
   KEY `doctorId` (`doctorId`),
   CONSTRAINT `fk_appointment_doctor` FOREIGN KEY (`doctorId`) REFERENCES `doctor` (`doctorId`),
   CONSTRAINT `fk_appointment_patient` FOREIGN KEY (`patientId`) REFERENCES `patient` (`patientId`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +47,6 @@ CREATE TABLE `appointment` (
 
 LOCK TABLES `appointment` WRITE;
 /*!40000 ALTER TABLE `appointment` DISABLE KEYS */;
-INSERT INTO `appointment` VALUES (1,13,10,'2023-12-30 00:00:00','10:00AM','2023-12-09 07:29:38',165.00,'Confirmed','order_1702103377219_279','New Patient'),(2,18,10,'2023-12-14 00:00:00','10:00AM','2023-12-09 07:30:18',165.00,'Cancelled','order_1702103417140_329','New Patient');
 /*!40000 ALTER TABLE `appointment` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -85,7 +84,7 @@ CREATE TABLE `doctor` (
   `dateOfBirth` date DEFAULT NULL,
   `gender` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`doctorId`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +93,7 @@ CREATE TABLE `doctor` (
 
 LOCK TABLES `doctor` WRITE;
 /*!40000 ALTER TABLE `doctor` DISABLE KEYS */;
-INSERT INTO `doctor` VALUES (10,'Pavan Kumar','Mistry','pavansharma.m0114si@gmail.com','18565268949','2023-12-21','Male'),(12,'Avansh','Sharma','avansh@gmail.com','4152365215','1999-11-24','Male'),(15,'Rithvik','Bura','rithvik@gmail.com','5142367891','2024-01-03','Male');
+INSERT INTO `doctor` VALUES (12,'Avansh','Sharma','avansh@gmail.com','4152365215','1999-11-24','Male'),(20,'Pavan Kumar','Mistry','pavan@gmail.comm','4152369874','2023-12-18','Male');
 /*!40000 ALTER TABLE `doctor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -117,7 +116,7 @@ CREATE TABLE `doctor_address` (
   PRIMARY KEY (`addressId`),
   KEY `doctorId` (`doctorId`),
   CONSTRAINT `doctor_address_ibfk_1` FOREIGN KEY (`doctorId`) REFERENCES `doctor` (`doctorId`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -126,7 +125,7 @@ CREATE TABLE `doctor_address` (
 
 LOCK TABLES `doctor_address` WRITE;
 /*!40000 ALTER TABLE `doctor_address` DISABLE KEYS */;
-INSERT INTO `doctor_address` VALUES (2,'Pitman, NJ, USA','New Jersey','United States','202, Cedar Avenue','1','008071',12),(3,'Pitman, NJ, USA','New Jersey','United States','202, Cedar Avenue','1','008071',12),(4,'Pitman, NJ, USA','New Jersey','United States','202, Cedar Avenue','2','008071',10),(6,'TATTIANNARAM','TELANGANA','India','SRI LAXMI GANAPATHI COLONY','Nagole','500068',15);
+INSERT INTO `doctor_address` VALUES (9,'Pitman, NJ, USA','New Jersey','United States','202, Cedar Avenue','Cedar','008071',20),(10,'Pitman, NJ, USA','New Jersey','United States','202, Cedar Avenue','Cedar','008071',20);
 /*!40000 ALTER TABLE `doctor_address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -143,8 +142,9 @@ CREATE TABLE `doctor_image_path` (
   `doctorId` int NOT NULL,
   PRIMARY KEY (`imageId`),
   KEY `doctorId` (`doctorId`),
+  KEY `idx_image_path` (`imagePath`),
   CONSTRAINT `doctor_image_path_ibfk_1` FOREIGN KEY (`doctorId`) REFERENCES `doctor` (`doctorId`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +153,7 @@ CREATE TABLE `doctor_image_path` (
 
 LOCK TABLES `doctor_image_path` WRITE;
 /*!40000 ALTER TABLE `doctor_image_path` DISABLE KEYS */;
-INSERT INTO `doctor_image_path` VALUES (2,'uploads/doctors/doctor_65716b5b306646.74658396.png',10),(3,'uploads/doctors/doctor_6572cdeca42f34.86260605.png',12),(5,'',15);
+INSERT INTO `doctor_image_path` VALUES (2,'',12),(3,'uploads/doctors/doctor_657f9143e07e04.07540679.png',20);
 /*!40000 ALTER TABLE `doctor_image_path` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,7 +172,7 @@ CREATE TABLE `doctor_specialization` (
   PRIMARY KEY (`specializationId`),
   KEY `doctorId` (`doctorId`),
   CONSTRAINT `doctor_specialization_ibfk_1` FOREIGN KEY (`doctorId`) REFERENCES `doctor` (`doctorId`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -181,7 +181,7 @@ CREATE TABLE `doctor_specialization` (
 
 LOCK TABLES `doctor_specialization` WRITE;
 /*!40000 ALTER TABLE `doctor_specialization` DISABLE KEYS */;
-INSERT INTO `doctor_specialization` VALUES (1,'Cardiology',10,105),(2,'Cardiology',12,152),(4,'Pediatrics',15,120);
+INSERT INTO `doctor_specialization` VALUES (2,'Cardiology',12,152),(5,'Orthopedics',20,180);
 /*!40000 ALTER TABLE `doctor_specialization` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -202,11 +202,8 @@ CREATE TABLE `invoice` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `status` varchar(255) DEFAULT 'Paid',
   PRIMARY KEY (`invoiceId`),
-  KEY `patientId` (`patientId`),
-  KEY `doctorId` (`doctorId`),
-  CONSTRAINT `invoice_ibfk_1` FOREIGN KEY (`patientId`) REFERENCES `patient` (`patientId`),
-  CONSTRAINT `invoice_ibfk_2` FOREIGN KEY (`doctorId`) REFERENCES `doctor` (`doctorId`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `idx_orderId` (`orderId`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +212,6 @@ CREATE TABLE `invoice` (
 
 LOCK TABLES `invoice` WRITE;
 /*!40000 ALTER TABLE `invoice` DISABLE KEYS */;
-INSERT INTO `invoice` VALUES (1,'order_1702103377219_279',13,165.00,'2023-12-09 06:29:38',10,'2023-12-09 06:29:38','Paid'),(2,'order_1702103417140_329',18,165.00,'2023-12-09 06:30:18',10,'2023-12-09 06:30:18','Refunded');
 /*!40000 ALTER TABLE `invoice` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,7 +232,7 @@ CREATE TABLE `patient` (
   `gender` varchar(20) DEFAULT NULL,
   `bloodGroup` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`patientId`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -294,7 +290,7 @@ CREATE TABLE `patient_image_path` (
   PRIMARY KEY (`imageId`),
   KEY `patientId` (`patientId`),
   CONSTRAINT `patient_image_path_ibfk_1` FOREIGN KEY (`patientId`) REFERENCES `patient` (`patientId`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -303,7 +299,6 @@ CREATE TABLE `patient_image_path` (
 
 LOCK TABLES `patient_image_path` WRITE;
 /*!40000 ALTER TABLE `patient_image_path` DISABLE KEYS */;
-INSERT INTO `patient_image_path` VALUES (3,'uploads/patients/patient_6572ceb441c1b1.80314936.png',13),(5,'',17),(6,'',18);
 /*!40000 ALTER TABLE `patient_image_path` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -326,7 +321,7 @@ CREATE TABLE `registration` (
   PRIMARY KEY (`userId`),
   UNIQUE KEY `phoneNumber` (`phoneNumber`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -335,7 +330,7 @@ CREATE TABLE `registration` (
 
 LOCK TABLES `registration` WRITE;
 /*!40000 ALTER TABLE `registration` DISABLE KEYS */;
-INSERT INTO `registration` VALUES (10,'Pavan Kumar','Mistry','18565268949','pavansharma.m0114si@gmail.com','$2y$10$kgPxnTvpnWbM5LWPlkb/h.lX84uVkhSbCRrof8Be9WGT.zYCd2BSS','doctor','2023-12-07 06:50:33'),(12,'Avansh','Sharma','4152365215','avansh@gmail.com','$2y$10$7M0xn1dW.fFscHvFeQbwpe6PKguauiQcPofPeEr5scQCQ3JroCjU.','doctor','2023-12-08 08:02:50'),(13,'Sai','Teja','5142368741','sai@gamil.com','$2y$10$ciokunPt0jNTzPXA/wtuQ./opjhpuhkpgD1Sh2Dp2uJ.0Y.CNCvia','patient','2023-12-08 08:06:31'),(15,'Rithvik','Bura','5142367891','rithvik@gmail.com','$2y$10$c7rZA1k8axGL7egdnu56e.C9Q0g0lDsdrJNDhs9hk4lsUP8TA95YS','doctor','2023-12-08 08:16:34'),(17,'vibhav','R','14521456987','vibhav@gmail.com','$2y$10$NCdf8oHD.2oR14CPSH9BBOy0ZEUL8DqbN8oBrWMwGwq6vVyRUIZs.','patient','2023-12-09 02:11:38'),(18,'Pinky','Sharma','143143143143','pinky@gmail.com','$2y$10$NFTL2/I3.kW9yJyrta6ZnecSqDUxX48OnZ0KtNht/nooDLXIRPP42','patient','2023-12-09 03:29:31');
+INSERT INTO `registration` VALUES (12,'Avansh','Sharma','4152365215','avansh@gmail.com','$2y$10$7M0xn1dW.fFscHvFeQbwpe6PKguauiQcPofPeEr5scQCQ3JroCjU.','doctor','2023-12-08 08:02:50'),(13,'Sai','Teja','5142368741','sai@gamil.com','$2y$10$ciokunPt0jNTzPXA/wtuQ./opjhpuhkpgD1Sh2Dp2uJ.0Y.CNCvia','patient','2023-12-08 08:06:31'),(17,'vibhav','R','14521456987','vibhav@gmail.com','$2y$10$NCdf8oHD.2oR14CPSH9BBOy0ZEUL8DqbN8oBrWMwGwq6vVyRUIZs.','patient','2023-12-09 02:11:38'),(18,'Pinky','Sharma','143143143143','pinky@gmail.com','$2y$10$NFTL2/I3.kW9yJyrta6ZnecSqDUxX48OnZ0KtNht/nooDLXIRPP42','patient','2023-12-09 03:29:31'),(20,'Pavan Kumar','Mistry','4152369874','pavan@gmail.comm','$2y$10$tLiiLKXaZLJDGKnAntSKLuPfYRuADq/t5yxT7GnTLjpct6kNmzqgK','doctor','2023-12-18 00:23:19');
 /*!40000 ALTER TABLE `registration` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -362,6 +357,73 @@ LOCK TABLES `specialization` WRITE;
 INSERT INTO `specialization` VALUES (11,'Cardiology'),(12,'Neurology'),(13,'Pediatrics'),(14,'Orthopedics'),(15,'Dentist');
 /*!40000 ALTER TABLE `specialization` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Temporary view structure for view `view_doctor`
+--
+
+DROP TABLE IF EXISTS `view_doctor`;
+/*!50001 DROP VIEW IF EXISTS `view_doctor`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `view_doctor` AS SELECT 
+ 1 AS `doctorId`,
+ 1 AS `firstName`,
+ 1 AS `lastName`,
+ 1 AS `email`,
+ 1 AS `phoneNumber`,
+ 1 AS `dateOfBirth`,
+ 1 AS `gender`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `view_specialization`
+--
+
+DROP TABLE IF EXISTS `view_specialization`;
+/*!50001 DROP VIEW IF EXISTS `view_specialization`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `view_specialization` AS SELECT 
+ 1 AS `specializationId`,
+ 1 AS `name`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Final view structure for view `view_doctor`
+--
+
+/*!50001 DROP VIEW IF EXISTS `view_doctor`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `view_doctor` AS select `doctor`.`doctorId` AS `doctorId`,`doctor`.`firstName` AS `firstName`,`doctor`.`lastName` AS `lastName`,`doctor`.`email` AS `email`,`doctor`.`phoneNumber` AS `phoneNumber`,`doctor`.`dateOfBirth` AS `dateOfBirth`,`doctor`.`gender` AS `gender` from `doctor` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `view_specialization`
+--
+
+/*!50001 DROP VIEW IF EXISTS `view_specialization`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `view_specialization` AS select `specialization`.`specializationId` AS `specializationId`,`specialization`.`name` AS `name` from `specialization` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -372,4 +434,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-10 17:38:44
+-- Dump completed on 2023-12-17 19:59:47
