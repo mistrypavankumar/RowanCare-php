@@ -538,7 +538,7 @@ function getProgressData($conn, $doctorId)
         $res['totalPatients'] = $result['totalPatients'];
     }
 
-    $result = executeQuery($conn, "SELECT getTotalPatients() as todaysPatients");
+    $result = executeQuery($conn, "SELECT getTotalTodaysPatients() as todaysPatients");
     if ($result !== null) {
         $res['todaysPatients'] = $result['todaysPatients'];
     }

@@ -86,6 +86,12 @@ $doctorDetails = getDoctorDetailsById($conn, $_GET['doctorId']);
                         </p>
                     </div>
                     <div class="mt-10">
+                        <h1 class="text-xl font-bold pb-5">Contact Number</h1>
+                        <div class="flex gap-5">
+                            <p class="bg-gray-100 border-2 border-gray-200 w-fit rounded-full text-gray-500 px-3">+1<?php echo $doctorDetails['phoneNumber'] ?></p>
+                        </div>
+                    </div>
+                    <div class="mt-10">
                         <h1 class="text-xl font-bold pb-5">Services</h1>
                         <div class="flex gap-5">
                             <p class="bg-gray-100 border-2 border-gray-200 w-fit rounded-full text-gray-500 px-3">Root Canal Therapy</p>
